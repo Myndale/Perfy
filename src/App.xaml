@@ -1,0 +1,18 @@
+<Application
+	x:Class="Perfy.App"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	StartupUri="MainWindow.xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:dlg="clr-namespace:Perfy.Dialogs"
+	d1p1:Ignorable="d"
+	xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006">
+
+	<Application.Resources>
+		<vm:ViewModelLocator x:Key="Locator" d:IsDataSource="True" xmlns:vm="clr-namespace:Perfy.ViewModel" />
+		<dlg:MessageBoxPresenter x:Key="{x:Type dlg:MessageBoxViewModel}" />
+		<dlg:OpenFileDialogPresenter x:Key="{x:Type dlg:OpenFileDialogViewModel}" />
+		<dlg:SaveFileDialogPresenter x:Key="{x:Type dlg:SaveFileDialogViewModel}" />
+		<dlg:HelpDialogBox x:Key="{x:Type dlg:HelpDialogViewModel}" x:Shared="False"/>
+	</Application.Resources>
+</Application>
