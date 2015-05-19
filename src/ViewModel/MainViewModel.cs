@@ -261,6 +261,23 @@ namespace Perfy.ViewModel
 				App.Current.MainWindow.Close();
 		}
 
+		public ICommand SummaryCommand { get { return new RelayCommand(SummaryCommand_Execute); } }
+		private void SummaryCommand_Execute()
+		{
+			var msg = String.Format(
+				"Horizontal pad solders:\t{0}\n" +
+				"Vertical pad solders:\t\t{1}\n" +
+				"Horizontal trace cuts:\t{2}\n" +
+				"Vertical trace cuts:\t\t{3}\n" +
+				"Total board utilization:\t{4}%",
+				this.Board.NumHorzHoles(),
+				this.Board.NumVertHoles(),
+				this.Board.NumHorzCuts(),
+				this.Board.NumVertCuts(),
+				this.Board.Utilization());
+			new MessageBoxViewModel(msg, "Circuit Summary", MessageBoxButton.OK, MessageBoxImage.Information).Show(this.Dialogs);
+		}
+
 		public ICommand HelpCommand { get { return new RelayCommand(OnHelp); } }
 		private void OnHelp()
 		{

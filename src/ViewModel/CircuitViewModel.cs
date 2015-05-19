@@ -52,13 +52,13 @@ namespace Perfy.ViewModel
 			// create the labels
 			for (int x = 0; x < 36; x++)
 			{
-				var label = new Label { X = x + 1, Y = 0, Text = (x + 1).ToString("D2"), Rotate = true};
-				this.BoardItems.Add(label);
+				this.BoardItems.Add(new Label { X = x + 1, Y = 0, Text = (x + 1).ToString("D2"), Rotate = true});
+				this.BoardItems.Add(new Label { X = x + 1, Y = 25, Text = (x + 1).ToString("D2"), Rotate = true });
 			}
 			for (int y = 0; y < 24; y++)
 			{
-				var label = new Label { X = 0, Y = y + 1, Text = ((char)((int)'A' + y)).ToString(), Rotate = false};
-				this.BoardItems.Add(label);
+				this.BoardItems.Add(new Label { X = 0, Y = y + 1, Text = ((char)((int)'A' + y)).ToString(), Rotate = false});
+				this.BoardItems.Add(new Label { X = 37, Y = y + 1, Text = ((char)((int)'A' + y)).ToString(), Rotate = false });
 			}
 			
 		}
@@ -186,6 +186,79 @@ namespace Perfy.ViewModel
 						pad.JunctionColor = "Transparent";
 				}
 		}
+
+
+		public int NumHorzHoles()
+		{
+			int count = 0;
+			for (int y = 0; y < 24; y++)
+				for (int x = 0; x < 36; x++)
+					if (this.PadArray[y,x].HorzHole)
+						count++;
+			return count;
+		}
+
+		public int NumVertHoles()
+		{
+			int count = 0;
+			for (int y = 0; y < 24; y++)
+				for (int x = 0; x < 36; x++)
+					if (this.PadArray[y,x].VertHole)
+						count++;
+			return count;
+		}
+
+		public int NumHorzCuts()
+		{
+			int count = 0;
+			for (int y = 0; y < 24; y++)
+				for (int x = 0; x < 36; x++)
+					if (this.PadArray[y,x].HorzJunction)
+						count++;
+			return count;
+		}
+
+		public int NumVertCuts()
+		{
+			int count = 0;
+			for (int y = 0; y < 24; y++)
+				for (int x = 0; x < 36; x++)
+					if (this.PadArray[y,x].VertJunction)
+						count++;
+			return count;
+		}
+
+		public int Utilization()
+		{
+			// first make a list of all nodes that have a pad on them
+			var nodes = new HashSet<Node>();
+			for (int y = 0; y < 24; y++)
+				for (int x = 0; x < 36; x++)
+				{
+					var pad = this.PadArray[y, x];
+					if (pad.HorzHole && !nodes.Contains(pad.HorzTrace.Node))
+						nodes.Add(pad.HorzTrace.Node);
+					if (pad.VertHole && !nodes.Contains(pad.VertTrace.Node))
+						nodes.Add(pad.VertTrace.Node);
+				}
+
+			// now count the number of pads that are connected to nodes in our list, 1 count per pad per size
+			int count = 0;
+			for (int y = 0; y < 24; y++)
+				for (int x = 0; x < 36; x++)
+				{
+					var pad = this.PadArray[y, x];
+					if (nodes.Contains(pad.HorzTrace.Node))
+						count++;
+					if (nodes.Contains(pad.VertTrace.Node))
+						count++;
+				}
+
+			// return a percentage value
+			return 100 * count / (36 * 24 * 2);
+		}
+
+
 
 	}
 

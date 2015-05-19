@@ -20,5 +20,6 @@ namespace Perfy.Model
 					this.PadArray[y][x] = new Pad();
 			}
 		}
+
 	}
 }

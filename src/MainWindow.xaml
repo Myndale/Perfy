@@ -77,6 +77,9 @@
 				<Separator />
 				<MenuItem Header="E_xit" Command="{Binding ExitCommand}" InputGestureText="Alt+F4"/>
 			</MenuItem>
+			<MenuItem Header="_Circuit">
+				<MenuItem Header="_Summary" Command="{Binding SummaryCommand}" />
+			</MenuItem>
 			<MenuItem Header="Hel_p">
 				<MenuItem Header="_View Help" Command="{Binding HelpCommand}" InputGestureText="Control-F1"/>
 				<MenuItem Header="_About" Command="{Binding AboutCommand}"/>
@@ -97,7 +100,7 @@
 		</ToolBar>
 		
 		<ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-			<ItemsControl ItemsSource="{Binding Board.BoardItems}" Width="37" Height="25" Background="DarkGreen">
+			<ItemsControl ItemsSource="{Binding Board.BoardItems}" Width="38" Height="26" Background="DarkGreen">
 				<ItemsControl.LayoutTransform>
 					<ScaleTransform ScaleX="{Binding Zoom}" ScaleY="{Binding Zoom}" />
 				</ItemsControl.LayoutTransform>
