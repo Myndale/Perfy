@@ -1,4 +1,4 @@
-Perfy v 1.0.0.1 - Perf+ Circuit Editor. Copyright (c) 2015 Mark Feldman (aka "Myndale").
+Perfy v 1.0.0.2 - Perf+ Circuit Editor. Copyright (c) 2015 Mark Feldman (aka "Myndale").
 
 Application Overview
 ====================
