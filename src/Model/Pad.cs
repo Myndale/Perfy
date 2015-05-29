@@ -8,13 +8,12 @@ namespace Perfy.Model
 {
 	public class Pad
 	{
-		public Joint Hole {get; set;}
-		public Joint Junction {get; set;}
-
-		public Pad()
-		{
-			this.Hole = new Joint { Horz = false, Vert = false };
-			this.Junction = new Joint { Horz = false, Vert = false };
-		}
+		public bool Component { get; set; }
+		public bool HorzPad { get; set; }
+		public bool VertPad { get; set; }
+		public bool HorzTrace { get; set; }
+		public bool VertTrace { get; set; }
+		public bool HorzJunction { get; set; }
+		public bool VertJunction { get; set; }
 	}
 }

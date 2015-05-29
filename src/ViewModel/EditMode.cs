@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace Perfy.ViewModel
 {
-	public class Node
+	public enum EditMode
 	{
-		public IList<Trace> Traces = new List<Trace>();
+		Pads,
+		Traces
 	}
 }

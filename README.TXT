@@ -33,4 +33,12 @@ Changes:
 Version: 1.0.0.1
 Date: 20th May 2015
 Changes:
-	- Added circuit summary and opposite edge board labels
+	- Added circuit summary and opposite edge board labels.
+
+Version: 1.0.0.2
+Date: 29th May 2015
+Changes:
+	- Complete re-design of interface.
+	- Automatic cut generation.
+	- Undo/redo.
+	- Exit warning for unsaved changes.

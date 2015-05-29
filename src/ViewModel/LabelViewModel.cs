@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Perfy.ViewModel
 {
-	public class Label : ViewModelBase
+	public class LabelViewModel : CircuitElementViewModel
 	{
 		private int _X;
 		public int X

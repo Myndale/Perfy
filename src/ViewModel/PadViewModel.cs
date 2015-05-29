@@ -9,9 +9,26 @@ using System.Threading.Tasks;
 namespace Perfy.ViewModel
 {
 	// a pad is a location on the perfboard consisting of a hole, a junction and two traces (one for each direction)
-	public class PadViewModel : ViewModelBase
+	public class PadViewModel : CircuitElementViewModel
 	{
-		public Pad Model { get; set; }
+		private Pad _Model;
+		public Pad Model
+		{
+			get { return this._Model; }
+			set
+			{
+				this._Model = value;
+				RaisePropertyChanged(() => this.Model);
+				RaisePropertyChanged(() => this.HorzPad);
+				RaisePropertyChanged(() => this.VertPad);
+				RaisePropertyChanged(() => this.HorzTrace);
+				RaisePropertyChanged(() => this.VertTrace);
+				RaisePropertyChanged(() => this.HorzJunction);
+				RaisePropertyChanged(() => this.VertJunction);
+				RaisePropertyChanged(() => this.Component);
+			}
+		}
+		
 
 		private int _X;
 		public int X
@@ -27,65 +44,89 @@ namespace Perfy.ViewModel
 			set { this._Y = value; RaisePropertyChanged(() => this.Y); }
 		}
 
-		public bool HorzHole
+		public bool Component
 		{
-			get { return this.Model.Hole.Horz; }
-			set { this.Model.Hole.Horz = value; RaisePropertyChanged(() => this.HorzHole); }
+			get { return this.Model.Component; }
+			set { this.Model.Component = value; RaisePropertyChanged(() => this.Component); }
 		}
 
-		public bool VertHole
+		public bool HorzPad
 		{
-			get { return this.Model.Hole.Vert; }
-			set { this.Model.Hole.Vert = value; RaisePropertyChanged(() => this.VertHole); }
+			get { return this.Model.HorzPad; }
+			set { this.Model.HorzPad = value; RaisePropertyChanged(() => this.HorzPad); }
 		}
 
-		private string _HoleColor = "Transparent";
-		public string HoleColor
+		public bool VertPad
 		{
-			get { return this._HoleColor; }
-			set { this._HoleColor = value; RaisePropertyChanged(() => this.HoleColor); }
+			get { return this.Model.VertPad; }
+			set { this.Model.VertPad = value; RaisePropertyChanged(() => this.VertPad); }
+		}
+
+		public bool HorzTrace
+		{
+			get { return this.Model.HorzTrace; }
+			set { this.Model.HorzTrace = value; RaisePropertyChanged(() => this.HorzTrace); }
+		}
+
+		public bool VertTrace
+		{
+			get { return this.Model.VertTrace; }
+			set { this.Model.VertTrace = value; RaisePropertyChanged(() => this.VertTrace); }
 		}
 
 		public bool HorzJunction
 		{
-			get { return this.Model.Junction.Horz; }
-			set { this.Model.Junction.Horz = value; RaisePropertyChanged(() => this.HorzJunction); }
+			get { return this.Model.HorzJunction; }
+			set { this.Model.HorzJunction = value; RaisePropertyChanged(() => this.HorzJunction); }
 		}
 
 		public bool VertJunction
 		{
-			get { return this.Model.Junction.Vert; }
-			set { this.Model.Junction.Vert = value; RaisePropertyChanged(() => this.VertJunction); }
+			get { return this.Model.VertJunction; }
+			set { this.Model.VertJunction = value; RaisePropertyChanged(() => this.VertJunction); }
 		}
 
-		private string _JunctionColor = "Transparent";
-		public string JunctionColor
+		private bool _HorzHighlighted;
+		public bool HorzHighlighted
 		{
-			get { return this._JunctionColor; }
-			set { this._JunctionColor = value; RaisePropertyChanged(() => this.JunctionColor); }
+			get { return this._HorzHighlighted; }
+			set { this._HorzHighlighted = value; RaisePropertyChanged(() => this.HorzHighlighted); }
 		}
 
-		private Trace _HorzTrace;
-		public Trace HorzTrace
+		private bool _VertHighlighted;
+		public bool VertHighlighted
 		{
-			get { return this._HorzTrace; }
-			set { this._HorzTrace = value; RaisePropertyChanged(() => this.HorzTrace); }
+			get { return this._VertHighlighted; }
+			set { this._VertHighlighted = value; RaisePropertyChanged(() => this.VertHighlighted); }
 		}
 
-		private Trace _VertTrace;
-		public Trace VertTrace
+		private bool _HorzHighlight = false;
+		public bool HorzHighlight
 		{
-			get { return this._VertTrace; }
-			set { this._VertTrace = value; RaisePropertyChanged(() => this.VertTrace); }
+			get { return this._HorzHighlight; }
+			set { this._HorzHighlight = value; RaisePropertyChanged(() => this.HorzHighlight); }
+		}
+
+		private bool _VertHighlight = false;
+		public bool VertHighlight
+		{
+			get { return this._VertHighlight; }
+			set { this._VertHighlight = value; RaisePropertyChanged(() => this.VertHighlight); }
+		}
+
+		private bool _HorzCut = false;
+		public bool HorzCut
+		{
+			get { return this._HorzCut; }
+			set { this._HorzCut = value; RaisePropertyChanged(() => this.HorzCut); }
+		}
+
+		private bool _VertCut = false;
+		public bool VertCut
+		{
+			get { return this._VertCut; }
+			set { this._VertCut = value; RaisePropertyChanged(() => this.VertCut); }
 		}
 		
-		public PadViewModel()
-		{
-			this.Model = new Pad();
-			this.HorzTrace = new Trace(this);
-			this.VertTrace = new Trace(this);
-		}
-
-
 	}
 }

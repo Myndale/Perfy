@@ -8,15 +8,18 @@ namespace Perfy.Model
 {
 	public class Circuit
 	{
-		public Pad[][] PadArray {get; set;}
+		public const int WIDTH = 36;
+		public const int HEIGHT = 24;
 
+		public Pad[][] PadArray { get; set; }
+		
 		public Circuit()
 		{
-			this.PadArray = new Pad[24][];
-			for (int y = 0; y < 24; y++)
+			this.PadArray = new Pad[Circuit.HEIGHT][];
+			for (int y = 0; y < Circuit.HEIGHT; y++)
 			{
-				this.PadArray[y] = new Pad[36];
-				for (int x = 0; x < 36; x++)
+				this.PadArray[y] = new Pad[Circuit.WIDTH];
+				for (int x = 0; x < Circuit.WIDTH; x++)
 					this.PadArray[y][x] = new Pad();
 			}
 		}

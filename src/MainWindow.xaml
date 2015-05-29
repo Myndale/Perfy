@@ -2,11 +2,13 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:local="clr-namespace:Perfy.ViewModel"
+		xmlns:behaviors="clr-namespace:Perfy.Behaviors"
 		xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
 		xmlns:cmd ="http://www.galasoft.ch/mvvmlight"
 		xmlns:dlgs="clr-namespace:MvvmDialogs.Behaviors;assembly=MvvmDialogs"
+		xmlns:conv="clr-namespace:Perfy.Converters"
 		x:Name ="_this"
-        Title="Perfy Circuit Designer" Height="600" Width="800"
+        Title="{Binding Caption}" Height="600" Width="800"
 		WindowState="Maximized"
 		dlgs:DialogBehavior.DialogViewModels="{Binding Dialogs}"
 		DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
@@ -18,45 +20,124 @@
 	</i:Interaction.Triggers>
 
 	<Window.InputBindings>
-		<KeyBinding Key="N" Modifiers="Control" Command="{Binding NewCommand}" />
 		<KeyBinding Key="O" Modifiers="Control" Command="{Binding OpenCommand}" />
+		<KeyBinding Key="N" Modifiers="Control" Command="{Binding NewCommand}" />
 		<KeyBinding Key="S" Modifiers="Control" Command="{Binding SaveCommand}" />
+		<KeyBinding Key="Z" Modifiers="Control" Command="{Binding UndoCommand}" />
+		<KeyBinding Key="Y" Modifiers="Control" Command="{Binding RedoCommand}" />
 		<KeyBinding Key="F4" Modifiers="Alt" Command="{Binding ExitCommand}" />
 		<KeyBinding Key="F1" Modifiers="Control" Command="{Binding HelpCommand}" />
 	</Window.InputBindings>
 
 	<Window.Resources>
+
+		<conv:EnumToBoolConverter x:Key="EnumToBoolConverter" />
+		<conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+		<SolidColorBrush x:Key="NormalPadBrush" Color="#808000" />
+		<SolidColorBrush x:Key="NormalComponentBrush" Color="Gold" />
+		<SolidColorBrush x:Key="NormalHorzBrush" Color="DarkRed" />
+		<SolidColorBrush x:Key="NormalVertBrush" Color="DarkBlue" />
+		<SolidColorBrush x:Key="NormalHorzVertBrush" Color="DarkMagenta" />
+
+		<SolidColorBrush x:Key="HighlightedComponentBrush" Color="White" />
+		<SolidColorBrush x:Key="HighlightedHorzBrush" Color="Red" />
+		<SolidColorBrush x:Key="HighlightedVertBrush" Color="Blue" />
+		<SolidColorBrush x:Key="HighlightedHorzVertBrush" Color="Magenta" />
 		
-		<Style x:Key="HoleStyle" TargetType="{x:Type Path}">
-			<Setter Property="Stroke">
-				<Setter.Value>
-					<SolidColorBrush Color="{Binding HoleColor}" />
-				</Setter.Value>
-			</Setter>
+		<SolidColorBrush x:Key="BackgroundBrush" Color="DarkGreen" />
+		<SolidColorBrush x:Key="HighlightBrush" Color="White" />
+
+		<Style x:Key="HorzStyle" TargetType="{x:Type Rectangle}">
+			<Setter Property="Fill" Value="{StaticResource NormalHorzBrush}" />
+			<Style.Triggers>
+				<DataTrigger Binding="{Binding HorzHighlighted}" Value="True">
+					<Setter Property="Fill" Value="{StaticResource HighlightedHorzBrush}" />
+				</DataTrigger>
+			</Style.Triggers>
 		</Style>
 
-		<Style x:Key="JunctionStyle" TargetType="{x:Type Path}">
-			<Setter Property="Fill">
-				<Setter.Value>
-					<SolidColorBrush Color="{Binding JunctionColor}" />
-				</Setter.Value>
-			</Setter>
+		<Style x:Key="VertStyle" TargetType="{x:Type Rectangle}">
+			<Setter Property="Fill" Value="{StaticResource NormalVertBrush}" />
+			<Style.Triggers>
+				<DataTrigger Binding="{Binding VertHighlighted}" Value="True">
+					<Setter Property="Fill" Value="{StaticResource HighlightedVertBrush}" />
+				</DataTrigger>
+			</Style.Triggers>
 		</Style>
 
-		<Style x:Key="HorzStyle" TargetType="{x:Type Path}">
-			<Setter Property="Fill">
-				<Setter.Value>
-					<SolidColorBrush Color="{Binding HorzTrace.Color}" />
-				</Setter.Value>
-			</Setter>
+		<Style x:Key="HorzVertStyle" TargetType="{x:Type Rectangle}">
+			<Setter Property="Fill" Value="{StaticResource NormalHorzVertBrush}" />
+			<Style.Triggers>
+				<DataTrigger Binding="{Binding HorzHighlighted}" Value="True">
+					<Setter Property="Fill" Value="{StaticResource HighlightedHorzBrush}" />
+				</DataTrigger>
+				<DataTrigger Binding="{Binding VertHighlighted}" Value="True">
+					<Setter Property="Fill" Value="{StaticResource HighlightedVertBrush}" />
+				</DataTrigger>
+				<MultiDataTrigger>
+					<MultiDataTrigger.Conditions>
+						<Condition Binding="{Binding HorzHighlighted}" Value="True" />
+						<Condition Binding="{Binding VertHighlighted}" Value="True" />
+					</MultiDataTrigger.Conditions>
+					<Setter Property="Fill" Value="{StaticResource HighlightedHorzVertBrush}" />
+				</MultiDataTrigger>
+			</Style.Triggers>
 		</Style>
 
-		<Style x:Key="VertStyle" TargetType="{x:Type Path}">
-			<Setter Property="Fill">
-				<Setter.Value>
-					<SolidColorBrush Color="{Binding VertTrace.Color}" />
-				</Setter.Value>
-			</Setter>
+		<Style x:Key="PadStyle" TargetType="{x:Type Rectangle}">
+			<Setter Property="Fill" Value="{StaticResource NormalHorzVertBrush}" />			
+			<Style.Triggers>
+				<MultiDataTrigger>
+					<MultiDataTrigger.Conditions>
+						<Condition Binding="{Binding HorzHighlighted}" Value="True" />
+						<Condition Binding="{Binding HorzPad}" Value="True" />
+					</MultiDataTrigger.Conditions>
+					<Setter Property="Fill" Value="{StaticResource HighlightedHorzBrush}" />
+				</MultiDataTrigger>
+				<MultiDataTrigger>
+					<MultiDataTrigger.Conditions>
+						<Condition Binding="{Binding VertHighlighted}" Value="True" />
+						<Condition Binding="{Binding VertPad}" Value="True" />
+					</MultiDataTrigger.Conditions>
+					<Setter Property="Fill" Value="{StaticResource HighlightedVertBrush}" />
+				</MultiDataTrigger>
+				<MultiDataTrigger>
+					<MultiDataTrigger.Conditions>
+						<Condition Binding="{Binding HorzHighlighted}" Value="True" />
+						<Condition Binding="{Binding VertHighlighted}" Value="True" />
+						<Condition Binding="{Binding HorzPad}" Value="True" />
+						<Condition Binding="{Binding VertPad}" Value="True" />
+					</MultiDataTrigger.Conditions>
+					<Setter Property="Fill" Value="{StaticResource HighlightedHorzVertBrush}" />
+				</MultiDataTrigger>
+			</Style.Triggers>
+		</Style>
+
+		<Style x:Key="JunctionStyle" TargetType="{x:Type Rectangle}">
+			<Setter Property="Fill" Value="{StaticResource NormalHorzVertBrush}" />
+			<Style.Triggers>
+				<MultiDataTrigger>
+					<MultiDataTrigger.Conditions>
+						<Condition Binding="{Binding HorzHighlighted}" Value="True" />
+						<Condition Binding="{Binding VertHighlighted}" Value="True" />
+					</MultiDataTrigger.Conditions>
+					<Setter Property="Fill" Value="{StaticResource HighlightedHorzVertBrush}" />
+				</MultiDataTrigger>
+				<MultiDataTrigger>
+					<MultiDataTrigger.Conditions>
+						<Condition Binding="{Binding HorzHighlighted}" Value="True" />
+						<Condition Binding="{Binding VertHighlighted}" Value="False" />
+					</MultiDataTrigger.Conditions>
+					<Setter Property="Fill" Value="{StaticResource HighlightedHorzBrush}" />
+				</MultiDataTrigger>
+					<MultiDataTrigger>
+						<MultiDataTrigger.Conditions>
+							<Condition Binding="{Binding HorzHighlighted}" Value="False" />
+							<Condition Binding="{Binding VertHighlighted}" Value="True" />
+						</MultiDataTrigger.Conditions>
+					<Setter Property="Fill" Value="{StaticResource HighlightedVertBrush}" />
+				</MultiDataTrigger>
+			</Style.Triggers>
 		</Style>
 
 	</Window.Resources>
@@ -77,11 +158,15 @@
 				<Separator />
 				<MenuItem Header="E_xit" Command="{Binding ExitCommand}" InputGestureText="Alt+F4"/>
 			</MenuItem>
+			<MenuItem Header="_Edit">
+				<MenuItem Header="_Undo"  Command="{Binding UndoCommand}" InputGestureText="Control+Z"/>
+				<MenuItem Header="_Redo" Command="{Binding RedoCommand}" InputGestureText="Control+Y"/>
+			</MenuItem>
 			<MenuItem Header="_Circuit">
 				<MenuItem Header="_Summary" Command="{Binding SummaryCommand}" />
 			</MenuItem>
-			<MenuItem Header="Hel_p">
-				<MenuItem Header="_View Help" Command="{Binding HelpCommand}" InputGestureText="Control-F1"/>
+			<MenuItem Header="He_lp">
+				<!--<MenuItem Header="_View Help" Command="{Binding HelpCommand}" InputGestureText="Control-F1"/>-->
 				<MenuItem Header="_About" Command="{Binding AboutCommand}"/>
 			</MenuItem>
 		</Menu>
@@ -89,79 +174,165 @@
 		<ToolBar Grid.Row="1">
 			<ToolBar.Resources>
 				<Style x:Key="ToolBarRadioButton" TargetType="{x:Type RadioButton}" BasedOn="{StaticResource {x:Type RadioButton}}" />
+				<Style x:Key="ToolBarCheckBox" TargetType="{x:Type CheckBox}" BasedOn="{StaticResource {x:Type CheckBox}}" />
 			</ToolBar.Resources>
 			<TextBlock Text="Zoom:" VerticalAlignment="Center" Margin="20,0,0,0"/>
 			<Button Width="20" Background="CornflowerBlue" Command="{Binding ZoomInCommand}" Content="+" />
 			<Button Width="20" Background="CornflowerBlue" Command="{Binding ZoomOutCommand}" Content="-" />
-			<TextBlock Text="Layers:" VerticalAlignment="Center" Margin="20,0,5,0"/>
-			<RadioButton Content="_Horz" Width="Auto" Style="{StaticResource ToolBarRadioButton}" IsChecked="{Binding HorzLayer}"/>
-			<RadioButton Content="_Vert" Width="Auto" Style="{StaticResource ToolBarRadioButton}" IsChecked="{Binding VertLayer}"/>
-			<RadioButton Content="_Both" Width="Auto" Style="{StaticResource ToolBarRadioButton}" IsChecked="{Binding BothLayers}"/>
+			
+			<TextBlock Text="Mode:" VerticalAlignment="Center" Margin="20,0,5,0"/>
+			<RadioButton Content="_Pads" Width="Auto" IsChecked="{Binding EditMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static local:EditMode.Pads}}" GroupName="EditMode" Style="{StaticResource ToolBarRadioButton}" />
+			<RadioButton Content="_Traces" Width="Auto" IsChecked="{Binding EditMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static local:EditMode.Traces}}" GroupName="EditMode" Style="{StaticResource ToolBarRadioButton}" Margin="4,0,0,0" />
+			
 		</ToolBar>
 		
 		<ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-			<ItemsControl ItemsSource="{Binding Board.BoardItems}" Width="38" Height="26" Background="DarkGreen">
+			<ItemsControl ItemsSource="{Binding Board.BoardItems}" Width="38" Height="26" FontSize="1">
 				<ItemsControl.LayoutTransform>
 					<ScaleTransform ScaleX="{Binding Zoom}" ScaleY="{Binding Zoom}" />
 				</ItemsControl.LayoutTransform>
 				<ItemsControl.Resources>
 					
 					<DataTemplate DataType="{x:Type local:PadViewModel}">
-						<Canvas Width="1" Height="1">
+						<Canvas Width="100" Height="100" Margin="1 1 -1 -1">
 							<Canvas.RenderTransform>
-								<TranslateTransform X="1" Y="1" />
+								<TransformGroup>
+									<ScaleTransform ScaleX="0.01" ScaleY="0.01" />
+								</TransformGroup>
 							</Canvas.RenderTransform>
+							
+							<!-- Horizontal trace -->
+							<Rectangle Canvas.Left="-10" Canvas.Top="0" Width="30" Height="10" Style="{StaticResource HorzStyle}" Visibility="{Binding HorzJunction, Converter={StaticResource BoolToVisibilityConverter}}" />
+							<Rectangle Canvas.Left="20" Canvas.Top="0" Width="70" Height="10" Style="{StaticResource HorzStyle}" Visibility="{Binding HorzTrace, Converter={StaticResource BoolToVisibilityConverter}}"/>
 
-							<!-- Hole -->
-							<Path Canvas.Top="0.5" Canvas.Left="0.5" StrokeThickness="0.125" Style="{StaticResource HoleStyle}" Cursor="Hand">
-								<i:Interaction.Triggers>
-									<i:EventTrigger EventName="PreviewMouseDown">
-										<cmd:EventToCommand Command="{Binding ElementName=_this, Path=DataContext.HoleSelectedCommand}" CommandParameter="{Binding}"/>
-									</i:EventTrigger>
-									<i:EventTrigger EventName="PreviewMouseMove">
-										<cmd:EventToCommand Command="{Binding ElementName=_this, Path=DataContext.HoleOverCommand}" CommandParameter="{Binding}"/>
-									</i:EventTrigger>
-								</i:Interaction.Triggers>
-								<Path.Data>
-									<EllipseGeometry RadiusX="0.25" RadiusY="0.25" />
-								</Path.Data>
-							</Path>
+							<!-- Vertical trace -->
+							<Rectangle Canvas.Left="0" Canvas.Top="-10" Width="10" Height="30" Style="{StaticResource VertStyle}"  Visibility="{Binding VertJunction, Converter={StaticResource BoolToVisibilityConverter}}"/>
+							<Rectangle Canvas.Left="0" Canvas.Top="20" Width="10" Height="70" Style="{StaticResource VertStyle}"  Visibility="{Binding VertTrace, Converter={StaticResource BoolToVisibilityConverter}}"/>
 
 							<!-- Junction -->
-							<Path Style="{StaticResource JunctionStyle}" Cursor="Hand">
-								<i:Interaction.Triggers>
-									<i:EventTrigger EventName="PreviewMouseDown">
-										<cmd:EventToCommand Command="{Binding ElementName=_this, Path=DataContext.JunctionSelectedCommand}" CommandParameter="{Binding}"/>
-									</i:EventTrigger>
-								</i:Interaction.Triggers>
-								<Path.Data>
-									<RectangleGeometry Rect="0 0 0.2 0.2" />
-								</Path.Data>
-							</Path>
+							<Rectangle Canvas.Left="0" Canvas.Top="0" Width="10" Height="10">
+								<Rectangle.Style>
+									<Style TargetType="{x:Type Rectangle}" BasedOn="{StaticResource JunctionStyle}">
+										<Setter Property="Visibility" Value="Hidden" />
+										<Style.Triggers>
+											<MultiDataTrigger>
+												<MultiDataTrigger.Conditions>
+													<Condition Binding="{Binding HorzJunction}" Value="True" />
+													<Condition Binding="{Binding VertJunction}" Value="True" />
+												</MultiDataTrigger.Conditions>
+												<Setter Property="Visibility" Value="Visible" />
+											</MultiDataTrigger>
+										</Style.Triggers>
+									</Style>
+								</Rectangle.Style>
+							</Rectangle>
 
-							<!-- Horz -->
-							<Path Canvas.Top="0" Canvas.Left="0.2" Style="{StaticResource HorzStyle}">
-								<Path.Data>
-									<RectangleGeometry Rect="0 0 0.8 0.2" />
-								</Path.Data>
-							</Path>
+							<!-- Pad connections -->
+							<Rectangle Canvas.Left="20" Canvas.Top="0" Width="70" Height="55" Style="{StaticResource HorzStyle}" Visibility="{Binding HorzPad, Converter={StaticResource BoolToVisibilityConverter}}"/>
+							<Rectangle Canvas.Left="0" Canvas.Top="20" Width="55" Height="70" Style="{StaticResource VertStyle}" Visibility="{Binding VertPad, Converter={StaticResource BoolToVisibilityConverter}}"/>
+							<Rectangle Canvas.Left="20" Canvas.Top="20" Width="35" Height="35">
+								<Rectangle.Style>
+									<Style TargetType="{x:Type Rectangle}" BasedOn="{StaticResource PadStyle}">
+										<Setter Property="Visibility" Value="Hidden" />
+										<Style.Triggers>
+											<MultiDataTrigger>
+												<MultiDataTrigger.Conditions>
+													<Condition Binding="{Binding HorzPad}" Value="True" />
+													<Condition Binding="{Binding VertPad}" Value="True" />
+												</MultiDataTrigger.Conditions>
+												<Setter Property="Visibility" Value="Visible" />
+											</MultiDataTrigger>
+										</Style.Triggers>
+									</Style>
+								</Rectangle.Style>
+							</Rectangle>
 
-							<!-- Vert -->
-							<Path Canvas.Top="0.2" Canvas.Left="0" Style="{StaticResource VertStyle}">
-								<Path.Data>
-									<RectangleGeometry Rect="0 0 0.2 0.8" />
-								</Path.Data>
-							</Path>
+							<!-- Pads -->
+							<Ellipse Canvas.Left="20" Canvas.Top="20" Width="70" Height="70" >
+								<Ellipse.Style>
+									<Style TargetType="{x:Type Ellipse}">
+										<Setter Property="Fill" Value="{StaticResource NormalPadBrush}" />
+										<Style.Triggers>
+											<DataTrigger Binding="{Binding HorzPad}" Value="True">
+												<Setter Property="Fill" Value="{StaticResource NormalHorzBrush}" />
+											</DataTrigger>
+											<MultiDataTrigger>
+												<MultiDataTrigger.Conditions>
+													<Condition Binding="{Binding HorzPad}" Value="True" />
+													<Condition Binding="{Binding HorzHighlighted}" Value="True" />
+												</MultiDataTrigger.Conditions>
+												<Setter Property="Fill" Value="{StaticResource HighlightedHorzBrush}" />
+											</MultiDataTrigger>
+											<DataTrigger Binding="{Binding VertPad}" Value="True">
+												<Setter Property="Fill" Value="{StaticResource NormalVertBrush}" />
+											</DataTrigger>
+											<MultiDataTrigger>
+												<MultiDataTrigger.Conditions>
+													<Condition Binding="{Binding VertPad}" Value="True" />
+													<Condition Binding="{Binding VertHighlighted}" Value="True" />
+												</MultiDataTrigger.Conditions>
+												<Setter Property="Fill" Value="{StaticResource HighlightedVertBrush}" />
+											</MultiDataTrigger>
+											<MultiDataTrigger>
+												<MultiDataTrigger.Conditions>
+													<Condition Binding="{Binding HorzPad}" Value="True" />
+													<Condition Binding="{Binding VertPad}" Value="True" />
+												</MultiDataTrigger.Conditions>
+												<Setter Property="Fill" Value="{StaticResource NormalHorzVertBrush}" />
+											</MultiDataTrigger>
+											<MultiDataTrigger>
+												<MultiDataTrigger.Conditions>
+													<Condition Binding="{Binding HorzPad}" Value="True" />
+													<Condition Binding="{Binding VertPad}" Value="True" />
+													<Condition Binding="{Binding HorzHighlighted}" Value="True" />
+												</MultiDataTrigger.Conditions>
+												<Setter Property="Fill" Value="{StaticResource HighlightedHorzVertBrush}" />
+											</MultiDataTrigger>
+											<MultiDataTrigger>
+												<MultiDataTrigger.Conditions>
+													<Condition Binding="{Binding HorzPad}" Value="True" />
+													<Condition Binding="{Binding VertPad}" Value="True" />
+													<Condition Binding="{Binding VertHighlighted}" Value="True" />
+												</MultiDataTrigger.Conditions>
+												<Setter Property="Fill" Value="{StaticResource HighlightedHorzVertBrush}" />
+											</MultiDataTrigger>
+											<DataTrigger Binding="{Binding Component}" Value="True">
+												<Setter Property="Fill" Value="{StaticResource NormalComponentBrush}" />
+											</DataTrigger>
+											<MultiDataTrigger>
+												<MultiDataTrigger.Conditions>
+													<Condition Binding="{Binding Component}" Value="True" />
+													<Condition Binding="{Binding HorzHighlighted}" Value="True" />
+													<Condition Binding="{Binding HorzPad}" Value="True" />
+												</MultiDataTrigger.Conditions>
+												<Setter Property="Fill" Value="{StaticResource HighlightedComponentBrush}" />
+											</MultiDataTrigger>
+											<MultiDataTrigger>
+												<MultiDataTrigger.Conditions>
+													<Condition Binding="{Binding Component}" Value="True" />
+													<Condition Binding="{Binding VertHighlighted}" Value="True" />
+													<Condition Binding="{Binding VertPad}" Value="True" />
+												</MultiDataTrigger.Conditions>
+												<Setter Property="Fill" Value="{StaticResource HighlightedComponentBrush}" />
+											</MultiDataTrigger>
+										</Style.Triggers>
+									</Style>
+								</Ellipse.Style>
+							</Ellipse>
+							<Ellipse Canvas.Left="40" Canvas.Top="40" Width="30" Height="30" Fill="{StaticResource BackgroundBrush}" />
 							
+							<!-- Highlight traces (rendered when laying a new trace down) -->
+							<Rectangle Canvas.Left="0" Canvas.Top="0" Width="100" Height="10" Fill="{StaticResource HighlightBrush}" Visibility="{Binding HorzHighlight, Converter={StaticResource BoolToVisibilityConverter}}" />
+							<Rectangle Canvas.Left="0" Canvas.Top="0" Width="10" Height="100" Fill="{StaticResource HighlightBrush}" Visibility="{Binding VertHighlight, Converter={StaticResource BoolToVisibilityConverter}}" />
 						</Canvas>
-						
+
 					</DataTemplate>
 
-					<DataTemplate DataType="{x:Type local:Label}">
+					<DataTemplate DataType="{x:Type local:LabelViewModel}">
 						<TextBlock FontSize="0.75" Foreground="White" Text="{Binding Text}" Width="1" Height="1"
 								   HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center">
 							<TextBlock.Style>
-								<Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+								<Style TargetType="{x:Type TextBlock}">
 									<Style.Triggers>
 										<DataTrigger Binding="{Binding Rotate}" Value="True">
 											<Setter Property="RenderTransform">
@@ -179,11 +350,15 @@
 							
 						</TextBlock>
 					</DataTemplate>
-
+					
 				</ItemsControl.Resources>
 				<ItemsControl.ItemsPanel>
 					<ItemsPanelTemplate>
-						<Canvas />
+						<Canvas Background="DarkGreen">
+							<i:Interaction.Behaviors>
+								<behaviors:MouseCaptureBehavior Proxy="{Binding}" />
+							</i:Interaction.Behaviors>
+						</Canvas>
 					</ItemsPanelTemplate>
 				</ItemsControl.ItemsPanel>
 				<ItemsControl.ItemContainerStyle>
