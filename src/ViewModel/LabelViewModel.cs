@@ -4,25 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Perfy.ViewModel
 {
 	public class LabelViewModel : CircuitElementViewModel
 	{
-		private int _X;
-		public int X
-		{
-			get { return this._X; }
-			set { this._X = value; RaisePropertyChanged(() => this.X); }
-		}
-
-		private int _Y;
-		public int Y
-		{
-			get { return this._Y; }
-			set { this._Y = value; RaisePropertyChanged(() => this.Y); }
-		}
-
 		private string _Text;
 		public string Text
 		{
@@ -30,12 +17,41 @@ namespace Perfy.ViewModel
 			set { this._Text = value; RaisePropertyChanged(() => this.Text); }
 		}
 
-		private bool _Rotate;
-		public bool Rotate
+		private int _Angle;
+		public int Angle
 		{
-			get { return this._Rotate; }
-			set { this._Rotate = value; RaisePropertyChanged(() => this.Rotate); }
+			get { return this._Angle; }
+			set { this._Angle = value; RaisePropertyChanged(() => this.Angle); }
 		}
+
+		private Point _FrontTranslate;
+		public Point FrontTranslate
+		{
+			get { return this._FrontTranslate; }
+			set { this._FrontTranslate = value; RaisePropertyChanged(() => this.FrontTranslate); }
+		}
+
+		private Point _FrontScale;
+		public Point FrontScale
+		{
+			get { return this._FrontScale; }
+			set { this._FrontScale = value; RaisePropertyChanged(() => this.FrontScale); }
+		}
+
+		private Point _RearTranslate;
+		public Point RearTranslate
+		{
+			get { return this._RearTranslate; }
+			set { this._RearTranslate = value; RaisePropertyChanged(() => this.RearTranslate); }
+		}
+
+		private Point _RearScale;
+		public Point RearScale
+		{
+			get { return this._RearScale; }
+			set { this._RearScale = value; RaisePropertyChanged(() => this.RearScale); }
+		}
+		
 		
 		
 	}

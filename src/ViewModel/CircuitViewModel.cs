@@ -16,6 +16,10 @@ namespace Perfy.ViewModel
 		private List<Pad[,]> UndoStack = new List<Pad[,]>();
 		private int UndoStackPos = 0;
 
+		// connectivity nodes used for gui highlights and calculating trace cuts
+		object[,] HorzNodes = new object[Circuit.HEIGHT, Circuit.WIDTH];
+		object[,] VertNodes = new object[Circuit.HEIGHT, Circuit.WIDTH];
+
 		private ObservableCollection<CircuitElementViewModel> _BoardItems = new ObservableCollection<CircuitElementViewModel>();
 		public ObservableCollection<CircuitElementViewModel> BoardItems
 		{
@@ -56,13 +60,42 @@ namespace Perfy.ViewModel
 			// create the labels
 			for (int x = 0; x < Circuit.WIDTH; x++)
 			{
-				this.BoardItems.Add(new LabelViewModel { X = x + 1, Y = 0, Text = (x + 1).ToString("D2"), Rotate = true});
-				this.BoardItems.Add(new LabelViewModel { X = x + 1, Y = 25, Text = (x + 1).ToString("D2"), Rotate = true });
+				this.BoardItems.Add(new LabelViewModel {
+					Text = (x + 1).ToString("D2"),
+					Angle = 90,
+					FrontTranslate = new Point { X = x + 2, Y = 0 },
+					FrontScale = new Point { X = 1, Y = 1 },
+					RearTranslate = new Point { X = -x - 1, Y = 0 },
+					RearScale = new Point { X = -1, Y = 1 }
+				});
+				this.BoardItems.Add(new LabelViewModel {
+					Text = (x + 1).ToString("D2"),
+					Angle = -90,
+					FrontTranslate = new Point { X = x + 1, Y = Circuit.HEIGHT + 2 },
+					FrontScale = new Point { X = 1, Y = 1 },
+					RearTranslate = new Point { X = -x - 2, Y = Circuit.HEIGHT + 2 },
+					RearScale = new Point { X = -1, Y = 1 }
+				});
 			}
+
 			for (int y = 0; y < Circuit.HEIGHT; y++)
 			{
-				this.BoardItems.Add(new LabelViewModel { X = 0, Y = y + 1, Text = ((char)((int)'A' + y)).ToString(), Rotate = false});
-				this.BoardItems.Add(new LabelViewModel { X = 37, Y = y + 1, Text = ((char)((int)'A' + y)).ToString(), Rotate = false });
+				this.BoardItems.Add(new LabelViewModel {
+					Text = ((char)((int)'A' + y)).ToString(),
+					Angle = 0,
+					FrontTranslate = new Point { X = 0, Y = y + 0.5 },
+					FrontScale = new Point { X = 1, Y = 1 },
+					RearTranslate = new Point { X = -1, Y = y + 1 },
+					RearScale = new Point { X = -1, Y = 1 }
+				});
+				this.BoardItems.Add(new LabelViewModel {
+					Text = ((char)((int)'A' + y)).ToString(),
+					Angle = 0,
+					FrontTranslate = new Point { X = Circuit.WIDTH + 1, Y = y + 0.5},
+					FrontScale = new Point { X = 1, Y = 1 },
+					RearTranslate = new Point { X = -Circuit.WIDTH - 2, Y = y + 1 },
+					RearScale = new Point { X = -1, Y = 1 }
+				});
 			}
 			
 		}
@@ -238,50 +271,26 @@ namespace Perfy.ViewModel
 
 		public void HighlightNode(int nodex, int nodey)
 		{
-			// give all pads a unique node
-			object[,] horzNodes = new object[Circuit.HEIGHT, Circuit.WIDTH];
-			object[,] vertNodes = new object[Circuit.HEIGHT, Circuit.WIDTH];
-			for (int y = 0; y < Circuit.HEIGHT; y++)
-				for (int x = 0; x < Circuit.WIDTH; x++)
-				{
-					horzNodes[y, x] = new object();
-					vertNodes[y, x] = new object();
-				}
-
-			// merge connected nodes
-			for (int y = 0; y < Circuit.HEIGHT; y++)
-				for (int x = 1; x < Circuit.WIDTH; x++)
-					if (this.PadArray[y, x].HorzJunction)
-						ConnectNodes(horzNodes, vertNodes, horzNodes[y, x - 1], horzNodes[y, x]);
-			for (int y = 1; y < Circuit.HEIGHT; y++)
-				for (int x = 0; x < Circuit.WIDTH; x++)
-					if (this.PadArray[y, x].VertJunction)
-						ConnectNodes(horzNodes, vertNodes, vertNodes[y - 1, x], vertNodes[y, x]);
-			for (int y = 0; y < Circuit.HEIGHT; y++)
-				for (int x = 0; x < Circuit.WIDTH; x++)
-					if (this.PadArray[y, x].HorzPad && this.PadArray[y, x].VertPad)
-						ConnectNodes(horzNodes, vertNodes, horzNodes[y, x], vertNodes[y, x]);
-
 			// highlight the current node, deselect everything else
-			var horzNode = this.PadArray[nodey, nodex].HorzPad ? horzNodes[nodey, nodex] : null;
-			var vertNode = this.PadArray[nodey, nodex].VertPad ? vertNodes[nodey, nodex] : null;
+			var horzNode = this.PadArray[nodey, nodex].HorzPad ? this.HorzNodes[nodey, nodex] : null;
+			var vertNode = this.PadArray[nodey, nodex].VertPad ? this.VertNodes[nodey, nodex] : null;
 			for (int y = 0; y < Circuit.HEIGHT; y++)
 				for (int x = 0; x < Circuit.WIDTH; x++)
 				{
-					this.PadArray[y, x].HorzHighlighted = (horzNodes[y, x] == horzNode) || (horzNodes[y, x] == vertNode);
-					this.PadArray[y, x].VertHighlighted = (vertNodes[y, x] == horzNode) || (vertNodes[y, x] == vertNode);
+					this.PadArray[y, x].HorzHighlighted = (this.HorzNodes[y, x] == horzNode) || (this.HorzNodes[y, x] == vertNode);
+					this.PadArray[y, x].VertHighlighted = (this.VertNodes[y, x] == horzNode) || (this.VertNodes[y, x] == vertNode);
 				}
 		}
 
-		private void ConnectNodes(object[,] horzNodes, object[,] vertNodes, object node1, object node2)
+		private void ConnectNodes(object node1, object node2)
 		{
 			for (int y = 0; y < Circuit.HEIGHT; y++)
 				for (int x = 0; x < Circuit.WIDTH; x++)
 				{
-					if (horzNodes[y, x] == node2)
-						horzNodes[y, x] = node1;
-					if (vertNodes[y, x] == node2)
-						vertNodes[y, x] = node1;
+					if (this.HorzNodes[y, x] == node2)
+						this.HorzNodes[y, x] = node1;
+					if (this.VertNodes[y, x] == node2)
+						this.VertNodes[y, x] = node1;
 				}
 		}
 
@@ -307,6 +316,7 @@ namespace Perfy.ViewModel
 				this.Changed = true;
 				this.UndoStack.Add(save);
 				this.UndoStackPos++;
+				CalculateNodes();
 				GenerateCuts();
 			}
 			if (fresh)
@@ -364,7 +374,33 @@ namespace Perfy.ViewModel
 					dst.HorzJunction = src.HorzJunction;
 					dst.VertJunction = src.VertJunction;
 				}
+			CalculateNodes();
 			GenerateCuts();
+		}
+
+		private void CalculateNodes()
+		{
+			// give all pads a unique node
+			for (int y = 0; y < Circuit.HEIGHT; y++)
+				for (int x = 0; x < Circuit.WIDTH; x++)
+				{
+					this.HorzNodes[y, x] = new object();
+					this.VertNodes[y, x] = new object();
+				}
+
+			// merge connected nodes
+			for (int y = 0; y < Circuit.HEIGHT; y++)
+				for (int x = 1; x < Circuit.WIDTH; x++)
+					if (this.PadArray[y, x].HorzJunction)
+						ConnectNodes(this.HorzNodes[y, x - 1], this.HorzNodes[y, x]);
+			for (int y = 1; y < Circuit.HEIGHT; y++)
+				for (int x = 0; x < Circuit.WIDTH; x++)
+					if (this.PadArray[y, x].VertJunction)
+						ConnectNodes(this.VertNodes[y - 1, x], this.VertNodes[y, x]);
+			for (int y = 0; y < Circuit.HEIGHT; y++)
+				for (int x = 0; x < Circuit.WIDTH; x++)
+					if (this.PadArray[y, x].HorzPad && this.PadArray[y, x].VertPad)
+						ConnectNodes(this.HorzNodes[y, x], this.VertNodes[y, x]);
 		}
 
 		private void GenerateCuts()
@@ -373,13 +409,15 @@ namespace Perfy.ViewModel
 			for (int y = 0; y < Circuit.HEIGHT; y++)
 			{
 				bool first = true;
+				object currentNode = null;
 				for (int x = 0; x < Circuit.WIDTH; x++)
 				{
 					this.PadArray[y, x].HorzCut = false;
 					if (this.PadArray[y, x].HorzPad && !this.PadArray[y, x].HorzJunction)
 					{
-						if (!first)
+						if (!first && (currentNode != this.HorzNodes[y, x]))
 							this.PadArray[y, x].HorzCut = true;
+						currentNode = this.HorzNodes[y, x];
 						first = false;
 					}
 				}
@@ -389,13 +427,15 @@ namespace Perfy.ViewModel
 			for (int x = 0; x < Circuit.WIDTH; x++)
 			{
 				bool first = true;
+				object currentNode = null;
 				for (int y = 0; y < Circuit.HEIGHT; y++)
 				{
 					this.PadArray[y, x].VertCut = false;
 					if (this.PadArray[y, x].VertPad && !this.PadArray[y, x].VertJunction)
 					{
-						if (!first)
+						if (!first && (currentNode != this.VertNodes[y,x]))
 							this.PadArray[y, x].VertCut = true;
+						currentNode = this.VertNodes[y, x];
 						first = false;
 					}
 				}

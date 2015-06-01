@@ -28,21 +28,6 @@ namespace Perfy.ViewModel
 				RaisePropertyChanged(() => this.Component);
 			}
 		}
-		
-
-		private int _X;
-		public int X
-		{
-			get { return this._X; }
-			set { this._X = value; RaisePropertyChanged(() => this.X); }
-		}
-
-		private int _Y;
-		public int Y
-		{
-			get { return this._Y; }
-			set { this._Y = value; RaisePropertyChanged(() => this.Y); }
-		}
 
 		public bool Component
 		{

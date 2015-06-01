@@ -24,7 +24,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>2</ApplicationRevision>
+    <ApplicationRevision>3</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -120,6 +120,8 @@
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\PadViewModel.cs" />
     <Compile Include="ViewModel\CircuitViewModel.cs" />
+    <Compile Include="ViewModel\Perspective.cs" />
+    <Compile Include="ViewModel\ViewMode.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Page Include="Dialogs\HelpDocument.xaml">
       <SubType>Designer</SubType>

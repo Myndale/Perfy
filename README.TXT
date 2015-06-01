@@ -1,4 +1,4 @@
-Perfy v 1.0.0.2 - Perf+ Circuit Editor. Copyright (c) 2015 Mark Feldman (aka "Myndale").
+Perfy v 1.0.0.3 - Perf+ Circuit Editor. Copyright (c) 2015 Mark Feldman (aka "Myndale").
 
 Application Overview
 ====================
@@ -42,3 +42,25 @@ Changes:
 	- Automatic cut generation.
 	- Undo/redo.
 	- Exit warning for unsaved changes.
+
+Version: 1.0.0.3
+Date: 1st June 2015
+Changes:
+	- Added cut views.
+	- Added trace guides.
+	- Fixed up labels.
+
+
+todo:
+	print
+	print preview
+	disable highlights etc in other modes
+	help
+	printable lists of cuts + solders
+	highlight cut coords
+	menu option for all views
+	optimize graphics
+	splash screen
+
+
+

@@ -56,11 +56,50 @@ namespace Perfy.ViewModel
 		public EditMode EditMode
 		{
 			get { return this._EditMode; }
-			set { CancelCurrentTrace();  this._EditMode = value; RaisePropertyChanged(() => this.EditMode); }
+			set
+			{
+				if (this._EditMode != value)
+				{
+					CancelCurrentTrace();
+					this._EditMode = value;
+					RaisePropertyChanged(() => this.EditMode);
+				}
+			}
 		}
-		
 
-		private double _Zoom;
+		private ViewMode _ViewMode = ViewMode.Normal;
+		public ViewMode ViewMode
+		{
+			get { return this._ViewMode; }
+			set
+			{
+				if (this._ViewMode != value)
+				{
+					this.Board.DeselectHighlights();
+					CancelCurrentTrace();
+					this._ViewMode = value;
+					RaisePropertyChanged(() => this.ViewMode);
+				}
+			}
+		}
+
+		private Perspective _Perspective = Perspective.Front;
+		public Perspective Perspective
+		{
+			get { return this._Perspective; }
+			set
+			{
+				if (this._Perspective != value)
+				{
+					this.Board.DeselectHighlights();
+					CancelCurrentTrace();
+					this._Perspective = value;
+					RaisePropertyChanged(() => this.Perspective);
+				}
+			}
+		}
+
+		private double _Zoom = 1;
 		public double Zoom
 		{
 			get { return this._Zoom; }
@@ -300,6 +339,8 @@ namespace Perfy.ViewModel
 
 		public void OnMouseDown(object sender, MouseCaptureArgs e)
 		{
+			if (this.ViewMode != ViewMode.Normal)
+				return;
 			if (this.EditMode == EditMode.Pads)
 				OnMouseDownPads(sender, e);
 			else if (this.EditMode == EditMode.Traces)
@@ -368,6 +409,9 @@ namespace Perfy.ViewModel
 
 		public void OnMouseMove(object sender, MouseCaptureArgs e)
 		{
+			if (this.ViewMode != ViewMode.Normal)
+				return;
+
 			var x = (int)(e.X - 1.0);
 			var y = (int)(e.Y - 1.0);
 			if (!ValidPosition(x, y))
