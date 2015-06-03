@@ -76,6 +76,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>packages\MvvmLightLibs.5.1.1.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
@@ -99,7 +100,7 @@
     </ApplicationDefinition>
     <Compile Include="Behaviors\MouseCaptureBehavior.cs" />
     <Compile Include="Behaviors\IMouseCaptureProxy.cs" />
-    <Compile Include="Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Converters\BindingProxy.cs" />
     <Compile Include="Converters\EnumToBoolConverter.cs" />
     <Compile Include="Dialogs\HelpDocument.cs" />
     <Compile Include="Dialogs\HelpDialogBox.xaml.cs">
@@ -123,6 +124,9 @@
     <Compile Include="ViewModel\Perspective.cs" />
     <Compile Include="ViewModel\ViewMode.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
+    <Compile Include="View\CellControl.xaml.cs">
+      <DependentUpon>CellControl.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\HelpDocument.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -143,6 +147,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\CellControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

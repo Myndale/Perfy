@@ -54,12 +54,9 @@ Changes:
 todo:
 	print
 	print preview
-	disable highlights etc in other modes
 	help
 	printable lists of cuts + solders
-	highlight cut coords
 	menu option for all views
-	optimize graphics
 	splash screen
 
 

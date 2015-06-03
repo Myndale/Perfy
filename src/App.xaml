@@ -5,7 +5,9 @@
 	StartupUri="MainWindow.xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:dlg="clr-namespace:Perfy.Dialogs"
+	xmlns:conv="clr-namespace:Perfy.Converters"
 	d1p1:Ignorable="d"
+	xmlns:PresentationOptions="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options" 
 	xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006">
 
 	<Application.Resources>
@@ -14,5 +16,19 @@
 		<dlg:OpenFileDialogPresenter x:Key="{x:Type dlg:OpenFileDialogViewModel}" />
 		<dlg:SaveFileDialogPresenter x:Key="{x:Type dlg:SaveFileDialogViewModel}" />
 		<dlg:HelpDialogBox x:Key="{x:Type dlg:HelpDialogViewModel}" x:Shared="False"/>
+
+		<SolidColorBrush x:Key="NormalPadBrush" Color="#808000" PresentationOptions:Freeze="True" />
+		<SolidColorBrush x:Key="NormalComponentBrush" Color="Gold" PresentationOptions:Freeze="True" />
+		<SolidColorBrush x:Key="NormalHorzBrush" Color="DarkRed" PresentationOptions:Freeze="True" />
+		<SolidColorBrush x:Key="NormalVertBrush" Color="DarkBlue" PresentationOptions:Freeze="True" />
+		<SolidColorBrush x:Key="NormalHorzVertBrush" Color="DarkMagenta" PresentationOptions:Freeze="True" />
+		<SolidColorBrush x:Key="HighlightedComponentBrush" Color="White" PresentationOptions:Freeze="True" />
+		<SolidColorBrush x:Key="HighlightedHorzBrush" Color="Red" PresentationOptions:Freeze="True" />
+		<SolidColorBrush x:Key="HighlightedVertBrush" Color="Blue" PresentationOptions:Freeze="True" />
+		<SolidColorBrush x:Key="HighlightedHorzVertBrush" Color="Magenta" PresentationOptions:Freeze="True" />
+		<SolidColorBrush x:Key="BackgroundBrush" Color="DarkGreen" PresentationOptions:Freeze="True" />
+		<SolidColorBrush x:Key="HighlightBrush" Color="White" PresentationOptions:Freeze="True" />
+		<SolidColorBrush x:Key="OutlineBrush" Color="Black" PresentationOptions:Freeze="True" />
+
 	</Application.Resources>
 </Application>

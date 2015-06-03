@@ -112,6 +112,20 @@ namespace Perfy.ViewModel
 			get { return this._VertCut; }
 			set { this._VertCut = value; RaisePropertyChanged(() => this.VertCut); }
 		}
+
+		private string _ToolTip;
+		public string ToolTip
+		{
+			get { return this._ToolTip; }
+			set { this._ToolTip = value; RaisePropertyChanged(() => this.ToolTip); }
+		}
+		
+
+		protected override void PositionUpdated()
+		{
+			base.PositionUpdated();
+			this.ToolTip = String.Format("{0},{1}", (char)('A' + this.Y), this.X);
+		}
 		
 	}
 }

@@ -442,7 +442,7 @@ namespace Perfy.ViewModel
 			}
 		}
 
-		public int NumHorzHoles
+		public int NumHorzPads
 		{
 			get
 			{
@@ -454,7 +454,8 @@ namespace Perfy.ViewModel
 				return count;
 			}
 		}
-		public int NumVertHoles
+
+		public int NumVertPads
 		{
 			get
 			{
@@ -462,6 +463,19 @@ namespace Perfy.ViewModel
 				for (int y=0; y<Circuit.HEIGHT; y++)
 					for (int x=0; x<Circuit.WIDTH; x++)
 						if (this.PadArray[y, x].VertPad)
+							count++;
+				return count;
+			}
+		}
+
+		public int NumIsolatedPads
+		{
+			get
+			{
+				int count = 0;
+				for (int y = 0; y < Circuit.HEIGHT; y++)
+					for (int x = 0; x < Circuit.WIDTH; x++)
+						if (this.PadArray[y, x].Component && !this.PadArray[y, x].HorzPad && !this.PadArray[y, x].VertPad)
 							count++;
 				return count;
 			}

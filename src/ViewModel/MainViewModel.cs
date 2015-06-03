@@ -289,11 +289,13 @@ namespace Perfy.ViewModel
 			var msg = String.Format(
 				"Horizontal pad solders:\t{0}\n" +
 				"Vertical pad solders:\t\t{1}\n" +
-				"Horizontal trace cuts:\t{2}\n" +
-				"Vertical trace cuts:\t\t{3}\n" +
-				"Total board utilization:\t{4}%",
-				this.Board.NumHorzHoles,
-				this.Board.NumVertHoles,
+				"Isolated pad solders:\t\t{2}\n" +
+				"Horizontal trace cuts:\t{3}\n" +
+				"Vertical trace cuts:\t\t{4}\n" +
+				"Total board utilization:\t{5}%",
+				this.Board.NumHorzPads,
+				this.Board.NumVertPads,
+				this.Board.NumIsolatedPads,
 				this.Board.NumHorzCuts,
 				this.Board.NumVertCuts,
 				this.Board.Utilization);

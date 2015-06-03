@@ -18,7 +18,7 @@
 		<Paragraph>
 			Perfy is an unofficial editor for the <Hyperlink NavigateUri="https://www.kickstarter.com/projects/658903329/perf-the-perfboard-reinvented">Perf+ prototype board</Hyperlink> invented by Ben Wang.
 			Unlike conventional perfboard, Perf+ contains both horizontal and vertical traces on opposite sides of the board.
-			The holes can be soldered to these traces to create more complex circuits than what can be created on more conventional board designs.
+			Holes can be soldered to neighbouring traces to create more complex circuits than what can be created on conventional perfboard without the use of additional jumpers.
 		</Paragraph>
 
 		<Paragraph>
@@ -26,21 +26,22 @@
 		</Paragraph>
 
 		<Paragraph>
-			Due to it's flexibility Perf+ can be a little tricky to design for at first, especially more complicated circuits containing many connections, so this tool was developed to help with the layout process.
-			Perfy allows you to specify which pads are connected to which traces, indicate where traces are broken and track how all pads are connected in your final design.
+			Due to it's flexibility Perf+ can be a little tricky to design for at first, especially more complicated circuits containing many connections.
+			This tool was developed to help with the process by allowing circuits to be designed in a manner similar to how they are with conventional PCB design.
+			You can then see which trace cuts and solder points are needed to transition your designs to physical hardware.
 		</Paragraph>
 	
 	</Section>
 
 	<Section>
 		
-	<Paragraph>
+		<Paragraph>
 			<Bold>How To Use Perfy</Bold>
 		</Paragraph>
 
 		<Paragraph>
 			In Perfy layers are color coded: red for horizontal traces (i.e. the front size of the board) and blue for vertical (the rear side).
-			By default pads are not connected to anything and thus appear grey:
+			By default pads are not connected to anything and appear dark yellow:
 		</Paragraph>
 	
 		<Paragraph>
@@ -52,125 +53,100 @@
 	<Section>
 
 		<Paragraph>
-			There is one rule to keep in mind while editing Perfy circuits: a left-click makes a connection and a right-click removes it.
-			Connections can be made and broken on either the circular pads or the junctions where the traces cross over each other.
+			<Bold>Specifying Component Locations</Bold>
 		</Paragraph>
 
 		<Paragraph>
-			To connect a pad to a trace first select which layer you wish to work with on the toolbar, for this example we'll start by working with the red/horizontal layer:
+			The first step in designing a Perf+ circuit is to specify where your components will be placed. In Perfy this is accomplished by switching into Pads mode
+			and clicking on the pads themselves. By default Perfy starts in Trace mode, so start by clicking on the "Pads" button on the tool bar:
 		</Paragraph>
 
 		<Paragraph>
-			<Image Source="/Perfy;component/Images/RedLayer.png" Stretch="None" />
+			To select a pad as a component lead simply click on it with the left mouse button, a right-click will similarly deselect it. Component pads appear bright yellow
+			to set them apart from regular pads:
+		</Paragraph>
+
+		<Paragraph>
+			Specifying component pads in Perfy is purely an asthetic step used to help keep track of your component locations when it comes time to lay down your traces.
+			It's perfectly possible to design your circuit without specifying components, but if you skip this step then it will be much more difficult later on to remember
+			where you need yoru traces to go.
 		</Paragraph>
 
 	</Section>
+
+	<Section>
+
+		<Paragraph>
+			<Bold>Drawing Traces</Bold>
+		</Paragraph>
+
+		<Paragraph>
+			With component pads now clearly marked it's now time to design our traces. First we need to switch into Trace mode by clicking the "Trace" radio button on the tool bar:
+		</Paragraph>
+
+		<Paragraph>
+			In trace mode we start drawing a trace by clicking on any pad on the board. Selecting a second pad will result in Perfy laying down either a horizontal or vertical
+			trace to the nearest point:
+		</Paragraph>
+
+		<Paragraph>
+			When the second point has been laid down Perfy will continue laying down traces with each left-button mouse click, in this way you can easily draw continuous traces
+			around the board. A right-mouse click will cancel the trace currently being drawn:
+		</Paragraph>
+
+		<Paragraph>
+			Note that as each horizontal or vertical trace is drawn Perfy automatically connects the corresponding hole to the appropriate trace line on either the front or rear
+			of the board. As with the traces horizontal connections appear red and vertical connections appear blue:
+		</Paragraph>
+
+		<Paragraph>
+			Any hole with both a horizontal and vertical connection is the Perf+ equivelent of a "via" i.e. a pad that connects both sides of the board. In Perfy these pads appear magenta:
+		</Paragraph>
+
+		<Paragraph>
+			In this image we see a pad that has been marked as a component pad, and we see both horizontal and vertical traces travelling along side it. Note however that although
+			a component lead is due to be soldered in this location it will not be connected to either trace:
+		</Paragraph>
+
+		<Paragraph>
+			In this image we see a pad that has been marked as a component pad, and we see both horizontal and vertical traces travelling alongside it. The component lead
+			soldered in this location will not, however, be connected to either the horizontal or vertical traces that run alongside it:
+		</Paragraph>
+
+	</Section>
+
+	<Section>
+
+		<Paragraph>
+			<Bold>Transitioning To Hardware</Bold>
+		</Paragraph>
+
+		<Paragraph>
+			As a circuit is being design Perfy is continuously calculating where cuts need to be made to the Perf+ board to keep. You can see these cuts at any time
+			by selecting either "Horz Cuts" or "Vert Cuts" from the view options on the toolbar:
+		</Paragraph>
+
+		<Paragraph>
+			The "Horz Pads" and "Vert Pads" options also allow you to see which pads need to be connected to which traces, this is particularly helpful with "vias" as they
+			can be soldered in advance before placing any components:
+		</Paragraph>
+
+		<Paragraph>
+			The pads view also help in indentifying component bridges that need to be made before the component itself is laid down. As an example, immagine we are placing
+			a component on the front (horizontal) side of the board that must be connected only to its horizontal bridge:
+		</Paragraph>
+
+		<Paragraph>
+			Soldering this bridge will be difficult if the component lies over top of the bridge itself (as is typically the case with ICs).
+			In cases like this you need to solder the bridge before placing the component, being careful not to solder over the pad hole itself.
+			Once done you can then insert the component and solder its lead to the other side, being careful again not to accidentally connect it to the vertical pad.
+		</Paragraph>
+
+	</Section>
+
 
 	<Section>
 		
-		<Paragraph>
-			We can now connect pads to their neighbouring horizontal traces by simply clicking on them with the left mouse button.
-			Notice how the pad itself turns red to indicate that it is connected to the trace while hovering the mouse over the pad highlights both the pad and the entire trace line:
-		</Paragraph>
-
-		<Paragraph>
-			<Image Source="/Perfy;component/Images/FirstPad.png" Stretch="None" />
-		</Paragraph>
-
-		<Paragraph>
-			Similarly we can disconnect the pad from the trace with a simple right click while the appropriate layer is selected on the toolbar.
-		</Paragraph>
-
-	</Section>
-
-	<Section>
-		
-		<Paragraph>
-			Now let's connect a vertical trace to the horizontal trace we've already created. Traces between the two layers get connected by soldering both sides of a pad,
-			so let's start by selecting the "Both" layer option from the tool bar:
-		</Paragraph>
-
-		<Paragraph>
-			<Image Source="/Perfy;component/Images/BothLayers.png" Stretch="None" />
-		</Paragraph>
-	
-	</Section>
-
-	<Section>
-		
-		<Paragraph>
-			Now create two more pads, one to the right of the pad we've already connected and then another pad a few lines below it.
-			Note that these pads turn purple to indicate they are connected to both their horizontal and vertical traces, and hovering over any of the pads we've
-			modified causes all three to be highlighted to show they are electrically connected:
-		</Paragraph>
-
-		<Paragraph>
-			<Image Source="/Perfy;component/Images/ThreePads.png" Stretch="None" />
-		</Paragraph>
-
-	</Section>
-
-	<Section>
-		
-		<Paragraph>
-			Now that we know how to connect pads to traces we need to be able to cut traces in order to stop them from going into parts of the circuit where we don't want them.
-			To do this we click on the junctions where the red and blue traces overlap. Ordinarily these junctions are purple to show that current can flow along their respective
-			traces in either direction:
-		</Paragraph>
-
-		<Paragraph>
-			<Image Source="/Perfy;component/Images/Junctions.png" Stretch="None" />
-		</Paragraph>
-
-	</Section>
-		
-	<Section>
-
-		<Paragraph>
-			(Note that even though the traces cross over each other they are not neccessarily connected as they reside on different layers).
-			Following from our previous example we want to stop the horizontal trace on our last pad from extending to the left.
-			We can do this by first selecting the horizontal layer on the toolbar again, since that's the layer we'll be modifying.
-			We can then simply right-click on the junction to the upper left of the last pad we placed.
-		</Paragraph>
-
-		<Paragraph>
-			<Image Source="/Perfy;component/Images/Target.png" Stretch="None" />
-		</Paragraph>
-
-	</Section>
-
-	<Section>
-		
-		<Paragraph>
-			Breaking this path with a right-click causes the junction to turn blue, since we've severed the red/horizontal trace and only the blue/vertical trace has been left intact.
-			Once again highlighting any of our pads will show all connected elements, and we can see that we've broken the horizontal trace in the desired location:
-		</Paragraph>
-
-		<Paragraph>
-			<Image Source="/Perfy;component/Images/Junc1.png" Stretch="None" />
-		</Paragraph>
-
-	</Section>
-
-	<Section>
-
-		<Paragraph>
-			A few more cuts to both layers and we can constrain the entire electrical path to only those parts of the perfboard we want it on:
-		</Paragraph>
-
-		<Paragraph>
-			<Image Source="/Perfy;component/Images/Final.png" Stretch="None" />
-		</Paragraph>
-
-	</Section>
-
-	<Section>
-		
-		<Paragraph>
-			As with pads, we can left-click on a junction to restore the connection should we change our mind.
-			With the combination of soldering pads to traces and breaking traces in appropriate places, we can create fairly complex circuits without the need for jumper wires.
-		</Paragraph>
-
 		<Paragraph>
 			<Bold>Support</Bold>
 		</Paragraph>

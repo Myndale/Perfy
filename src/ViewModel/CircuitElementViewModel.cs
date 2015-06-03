@@ -13,16 +13,18 @@ namespace Perfy.ViewModel
 		public int X
 		{
 			get { return this._X; }
-			set { this._X = value; RaisePropertyChanged(() => this.X); }
+			set { this._X = value; RaisePropertyChanged(() => this.X); PositionUpdated(); }
 		}
 
 		private int _Y = 0;
 		public int Y
 		{
 			get { return this._Y; }
-			set { this._Y = value; RaisePropertyChanged(() => this.Y); }
+			set { this._Y = value; RaisePropertyChanged(() => this.Y); PositionUpdated(); }
 		}
 
-		
+		protected virtual void PositionUpdated()
+		{
+		}
 	}
 }
