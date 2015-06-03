@@ -22,10 +22,17 @@ A short summary of the MIT license can be found at https://www.tldrlegal.com/l/m
 	"A short, permissive software license. Basically, you can do whatever you want as long as you include the original copyright and license in their
 	respective sources."
 
+Planned features/known bugs
+===========================
+	Make exports correct size
+	Add print functionality
+	Add text report for cuts/solders
+	Splash screen
+
 Release History
 ===============
 
-Version: 1.0.0.0
+Version: 1.0.0.0-
 Date: 19th May 2015
 Changes:
 	- Initial public release
@@ -47,17 +54,9 @@ Version: 1.0.0.3
 Date: 1st June 2015
 Changes:
 	- Added cut views.
+	- Added template views.
 	- Added trace guides.
 	- Fixed up labels.
-
-
-todo:
-	print
-	print preview
-	help
-	printable lists of cuts + solders
-	menu option for all views
-	splash screen
-
-
-
+	- Optimized graphics
+	- Added image export
+	- Rewrote help and fixed hyperlinks.

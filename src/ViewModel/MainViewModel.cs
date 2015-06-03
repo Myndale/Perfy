@@ -13,6 +13,9 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml.Serialization;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Controls;
 
 namespace Perfy.ViewModel
 {
@@ -503,6 +506,74 @@ namespace Perfy.ViewModel
 		private bool ValidPosition(int x, int y)
 		{
 			return (x >= 0) && (x < Circuit.WIDTH) && (y >= 0) && (y < Circuit.HEIGHT);
+		}
+
+		// todo: finish implementing this
+		public ICommand PrintCommand { get { return new RelayCommand<Visual>(OnPrint); } }
+		private void OnPrint(Visual visual)
+		{
+			PrintDialog dlg = new PrintDialog();
+			if (dlg.ShowDialog().Value)
+				dlg.PrintVisual(visual, "Perfy Circuit");
+		}
+
+		public ICommand ExportImageCommand { get { return new RelayCommand<Visual>(OnExportImage); } }
+		private void OnExportImage(Visual visual)
+		{			
+			var dlg = new SaveFileDialogViewModel
+			{
+				Title = "Export Circuit",
+				FileName = "",
+				//Filter = "All Image Files (*.bmp;*.gif;*.jpg;*.jpeg;*.jpe;*.jfif;*.png;*.tiff;*.tga)|*.bmp;*.gif;*.jpg;*.jpeg;*.jpe;*.jfif;*.png;*.tiff;*.tga|BMP (*.bmp)|*.bmp|GIF (*.gif)|*.gif|JPG (*.jpg;*.jpeg;*.jpe;*.jfif)|*.jpg;*.jpeg;*.jpe;*.jfif|PNG (*.png)|*.png|TIFF (*.tiff)|*.tiff|TGA (*.tga)|*.tga",
+				Filter = "PNG FIle (*.png)|*.png",
+			};
+			if (dlg.Show(this.Dialogs) != System.Windows.Forms.DialogResult.OK)
+				return;
+
+			try
+			{
+				using (var memstream = GenerateImage(visual))
+				using (FileStream fstream = File.OpenWrite(dlg.FileName))
+				{
+					memstream.WriteTo(fstream);
+					fstream.Flush();
+					fstream.Close();
+				}
+			}
+			catch (Exception e)
+			{
+				new MessageBoxViewModel("Error exporting image: " + e.Message, "Error").Show(this.Dialogs);
+			}
+		}
+
+		public MemoryStream GenerateImage(Visual visual)
+		{
+			BitmapEncoder encoder = new PngBitmapEncoder();
+			RenderTargetBitmap rtb = CaptureScreen(visual);
+			MemoryStream file = new MemoryStream();
+			encoder.Frames.Add(BitmapFrame.Create(rtb));
+			encoder.Save(file);
+			return file;
+		}
+
+		// standard pcb pitch is 0.1 inch, so a Perfy+ board is 3.8 x 2.6 inches. in reality it's larger but in Perfy board is 38 x 26 squares, and we're only concerned about the holes
+		// lining up. this routine generates an appropriately sized image at 32 pixels per inch.
+		private static RenderTargetBitmap CaptureScreen(Visual target)
+		{
+			if (target == null)
+			{
+				return null;
+			}
+			Rect bounds = VisualTreeHelper.GetDescendantBounds(target);
+			RenderTargetBitmap rtb = new RenderTargetBitmap(38 * 96, 26 * 96, 96, 96, PixelFormats.Pbgra32);
+			DrawingVisual dv = new DrawingVisual();
+			using (DrawingContext ctx = dv.RenderOpen())
+			{
+				VisualBrush vb = new VisualBrush(target);
+				ctx.DrawRectangle(vb, null, new Rect(new Point(), new Point(38 * 96, 26 * 96)));
+			}
+			rtb.Render(dv);
+			return rtb;
 		}
 
 	}

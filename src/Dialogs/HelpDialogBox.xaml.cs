@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,5 +24,38 @@ namespace Perfy.Dialogs
 		{
 			InitializeComponent();
 		}
+
+		// tsk tsk, breaks mvvm
+		private void Window_Loaded(object sender, RoutedEventArgs e)
+		{
+			SubscribeToAllHyperlinks(this.Viewer.Document as FlowDocument);
+		}
+
+		#region Activate Hyperlinks in the Rich Text box
+		//http://stackoverflow.com/questions/5465667/handle-all-hyperlinks-mouseenter-event-in-a-loaded-loose-flowdocument
+		void SubscribeToAllHyperlinks(FlowDocument flowDocument)
+		{
+			var hyperlinks = GetVisuals(flowDocument).OfType<Hyperlink>();
+			foreach (var link in hyperlinks)
+				link.RequestNavigate += new System.Windows.Navigation.RequestNavigateEventHandler(link_RequestNavigate);
+		}
+
+		public static IEnumerable<DependencyObject> GetVisuals(DependencyObject root)
+		{
+			foreach (var child in LogicalTreeHelper.GetChildren(root).OfType<DependencyObject>())
+			{
+				yield return child;
+				foreach (var descendants in GetVisuals(child))
+					yield return descendants;
+			}
+		}
+
+		void link_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+		{
+			//http://stackoverflow.com/questions/2288999/how-can-i-get-a-flowdocument-hyperlink-to-launch-browser-and-go-to-url-in-a-wpf
+			Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
+			e.Handled = true;
+		}
+		#endregion Activate Hyperlinks in the Rich Text box
 	}
 }

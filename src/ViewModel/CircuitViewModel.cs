@@ -493,6 +493,7 @@ namespace Perfy.ViewModel
 				return count;
 			}
 		}
+
 		public int NumVertCuts
 		{
 			get

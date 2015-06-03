@@ -39,13 +39,14 @@
 		</DataTemplate>
 	
 		<DataTemplate DataType="{x:Type local:LabelViewModel}">
-			<TextBlock FontSize="0.75" Foreground="White" Text="{Binding Text}" Width="1" Height="1"
+			<TextBlock FontSize="0.75" Text="{Binding Text}" Width="1" Height="1"
 								   HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center">
 				<TextBlock.Resources>
 					<conv:BindingProxy x:Key="BindingProxy" Data="{Binding}" />
 				</TextBlock.Resources>
 				<TextBlock.Style>
 					<Style TargetType="{x:Type TextBlock}">
+						<Setter Property="Foreground" Value="White" />
 						<Setter Property="RenderTransform">
 							<Setter.Value>
 								<TransformGroup>
@@ -66,6 +67,9 @@
 										</TransformGroup>
 									</Setter.Value>
 								</Setter>
+							</DataTrigger>
+							<DataTrigger Binding="{Binding ElementName=_this, Path=DataContext.ViewMode}" Value="{x:Static local:ViewMode.Template}">
+								<Setter Property="Foreground" Value="Black" />
 							</DataTrigger>
 						</Style.Triggers>
 					</Style>
@@ -89,6 +93,9 @@
 				<MenuItem Header="_Save" Command="{Binding SaveCommand}" InputGestureText="Control+S"/>
 				<MenuItem Header="Save _As" Command="{Binding SaveAsCommand}" />
 				<Separator />
+				<!--<MenuItem Header="Print" Command="{Binding PrintCommand}" CommandParameter="{Binding ElementName=CircuitControl}" />-->
+				<MenuItem Header="Export Image" Command="{Binding ExportImageCommand}" CommandParameter="{Binding ElementName=CircuitControl}" />
+				<Separator />
 				<MenuItem Header="E_xit" Command="{Binding ExitCommand}" InputGestureText="Alt+F4"/>
 			</MenuItem>
 			<MenuItem Header="_Edit">
@@ -100,18 +107,17 @@
 				<MenuItem Header="Zoom In" Command="{Binding ZoomInCommand}" InputGestureText="+" />
 				<MenuItem Header="Zoom Out" Command="{Binding ZoomoutCommand}" InputGestureText="-" />
 				<Separator />
-				<MenuItem Header="_Front" IsCheckable="True" IsChecked="{Binding Perspective, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static local:Perspective.Front}}" />
-				<MenuItem Header="_Rear" IsCheckable="True" IsChecked="{Binding Perspective, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static local:Perspective.Rear}}" />
+				<MenuItem Header="Front" IsCheckable="True" IsChecked="{Binding Perspective, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static local:Perspective.Front}}" />
+				<MenuItem Header="Rear" IsCheckable="True" IsChecked="{Binding Perspective, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static local:Perspective.Rear}}" />
 				<Separator />
-				<MenuItem Header="_Normal" IsCheckable="True" IsChecked="{Binding ViewMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static local:ViewMode.Normal}}" />
-				<MenuItem Header="Horz Cuts" IsCheckable="True" IsChecked="{Binding ViewMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static local:ViewMode.HorzCuts}}" />
-				<MenuItem Header="Vert Cuts" IsCheckable="True" IsChecked="{Binding ViewMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static local:ViewMode.VertCuts}}" />
-				<MenuItem Header="Horz Pads" IsCheckable="True" IsChecked="{Binding ViewMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static local:ViewMode.HorzPads}}" />
-				<MenuItem Header="Vert Pads" IsCheckable="True" IsChecked="{Binding ViewMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static local:ViewMode.VertPads}}" />
+				<MenuItem Header="Normal" IsCheckable="True" IsChecked="{Binding ViewMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static local:ViewMode.Normal}}" />
+				<MenuItem Header="Cuts" IsCheckable="True" IsChecked="{Binding ViewMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static local:ViewMode.Cuts}}" />
+				<MenuItem Header="Pads" IsCheckable="True" IsChecked="{Binding ViewMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static local:ViewMode.Pads}}" />
+				<MenuItem Header="Template" IsCheckable="True" IsChecked="{Binding ViewMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static local:ViewMode.Template}}" />
 			</MenuItem>
 			<MenuItem Header="_Circuit">
-				<MenuItem Header="_Pads" IsCheckable="True" IsChecked="{Binding EditMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static local:EditMode.Pads}}" />
-				<MenuItem Header="_Traces" IsCheckable="True" IsChecked="{Binding EditMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static local:EditMode.Traces}}" />
+				<MenuItem Header="Pads" IsCheckable="True" IsChecked="{Binding EditMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static local:EditMode.Pads}}" />
+				<MenuItem Header="Traces" IsCheckable="True" IsChecked="{Binding EditMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static local:EditMode.Traces}}" />
 				<Separator />
 				<MenuItem Header="_Summary" Command="{Binding SummaryCommand}" />
 			</MenuItem>
@@ -146,27 +152,27 @@
 			<Separator Margin="10,0,10,0"/>
 			
 			<TextBlock Text="View:" VerticalAlignment="Center" Margin="0,0,5,0" />
-			<RadioButton Content="_Normal" Width="Auto" IsChecked="{Binding ViewMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static local:ViewMode.Normal}}" GroupName="ViewMode" Style="{StaticResource ToolBarRadioButton}" />
-			<RadioButton Content="Horz Cuts" Width="Auto" IsChecked="{Binding ViewMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static local:ViewMode.HorzCuts}}" GroupName="ViewMode" Style="{StaticResource ToolBarRadioButton}" Margin="4,0,0,0" />
-			<RadioButton Content="Vert Cuts" Width="Auto" IsChecked="{Binding ViewMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static local:ViewMode.VertCuts}}" GroupName="ViewMode" Style="{StaticResource ToolBarRadioButton}" Margin="4,0,0,0" />
-			<RadioButton Content="Horz Pads" Width="Auto" IsChecked="{Binding ViewMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static local:ViewMode.HorzPads}}" GroupName="ViewMode" Style="{StaticResource ToolBarRadioButton}" Margin="4,0,0,0" />
-			<RadioButton Content="Vert Pads" Width="Auto" IsChecked="{Binding ViewMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static local:ViewMode.VertPads}}" GroupName="ViewMode" Style="{StaticResource ToolBarRadioButton}" Margin="4,0,0,0" />			
+			<RadioButton Content="Normal" Width="Auto" IsChecked="{Binding ViewMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static local:ViewMode.Normal}}" GroupName="ViewMode" Style="{StaticResource ToolBarRadioButton}" />
+			<RadioButton Content="Cuts" Width="Auto" IsChecked="{Binding ViewMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static local:ViewMode.Cuts}}" GroupName="ViewMode" Style="{StaticResource ToolBarRadioButton}" Margin="4,0,0,0" />
+			<RadioButton Content="Pads" Width="Auto" IsChecked="{Binding ViewMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static local:ViewMode.Pads}}" GroupName="ViewMode" Style="{StaticResource ToolBarRadioButton}" Margin="4,0,0,0" />
+			<RadioButton Content="Template" Width="Auto" IsChecked="{Binding ViewMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static local:ViewMode.Template}}" GroupName="ViewMode" Style="{StaticResource ToolBarRadioButton}" Margin="4,0,0,0" />
 
 		</ToolBar>
 		
 		<ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-			<ItemsControl ItemsSource="{Binding Board.BoardItems}" Width="38" Height="26" FontSize="1">
+			<ItemsControl x:Name="CircuitControl" ItemsSource="{Binding Board.BoardItems}" Width="38" Height="26" FontSize="1" Background="White">
 				<ItemsControl.LayoutTransform>
 					<ScaleTransform ScaleX="{Binding Zoom}" ScaleY="{Binding Zoom}" />
 				</ItemsControl.LayoutTransform>
 				<ItemsControl.ItemsPanel>
 					<ItemsPanelTemplate>
-						<Canvas Background="DarkGreen">
+						<Canvas>
 							<i:Interaction.Behaviors>
 								<behaviors:MouseCaptureBehavior Proxy="{Binding}" />
 							</i:Interaction.Behaviors>
 							<Canvas.Style>
 								<Style TargetType="{x:Type Canvas}">
+									<Setter Property="Background" Value="{StaticResource BackgroundBrush}" />
 									<Setter Property="RenderTransform">
 										<Setter.Value>
 											<TransformGroup>
@@ -184,6 +190,9 @@
 													</TransformGroup>
 												</Setter.Value>
 											</Setter>
+										</DataTrigger>
+										<DataTrigger Binding="{Binding ElementName=_this, Path=DataContext.ViewMode}" Value="{x:Static local:ViewMode.Template}">
+											<Setter Property="Background" Value="White" />
 										</DataTrigger>
 									</Style.Triggers>
 								</Style>

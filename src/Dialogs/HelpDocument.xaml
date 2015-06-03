@@ -2,7 +2,7 @@
 	x:Class="Perfy.Dialogs.HelpDocument"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	ColumnWidth="800" FontSize="14" FontFamily="Georgia">
+	ColumnWidth="600" FontSize="14" FontFamily="Georgia">
 	
 	
 	<Section>
@@ -27,61 +27,109 @@
 
 		<Paragraph>
 			Due to it's flexibility Perf+ can be a little tricky to design for at first, especially more complicated circuits containing many connections.
-			This tool was developed to help with the process by allowing circuits to be designed in a manner similar to how they are with conventional PCB design.
-			You can then see which trace cuts and solder points are needed to transition your designs to physical hardware.
-		</Paragraph>
-	
-	</Section>
-
-	<Section>
-		
-		<Paragraph>
-			<Bold>How To Use Perfy</Bold>
+			This tool was developed to help the process by allowing circuits to be designed in a manner similar to that of conventional PCB design.
+			You can then see which trace cuts and solder points are required to transition your design to physical hardware.
 		</Paragraph>
 
 		<Paragraph>
-			In Perfy layers are color coded: red for horizontal traces (i.e. the front size of the board) and blue for vertical (the rear side).
+			<Bold>Keyboard shortcuts:</Bold>
+		</Paragraph>
+			
+		<List>
+			<ListItem>
+				<Paragraph>Control-O: Open file</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>Control-N: New circuit</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>Control-S: Save file</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>Control-Z: Undo</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>Control-Y: Redo</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>P: Edit Pads</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>T: Edit Traces</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>+ : Zoom In</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>- : Zoom Out</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>Control-F1: Help</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>Alt-F4: Exit</Paragraph>
+			</ListItem>
+		</List>
+
+	</Section>	
+
+	<Section BreakPageBefore="True">
+
+		<Paragraph>
+			<Bold>Getting Started</Bold>
+		</Paragraph>
+
+		<Paragraph>
+			Perfy layers are color coded red for horizontal traces (i.e. the front size of the board) and blue for vertical (the rear side).
 			By default pads are not connected to anything and appear dark yellow:
 		</Paragraph>
-	
+
 		<Paragraph>
-			<Image Source="/Perfy;component/Images/First.png" Stretch="None" />
+			<Image Source="/Perfy;component/Images/pads.png" Stretch="None" />
 		</Paragraph>
 
 	</Section>
 
-	<Section>
+	<Section BreakPageBefore="True">
 
 		<Paragraph>
-			<Bold>Specifying Component Locations</Bold>
+			The first step in designing a Perf+ circuit is to specify where your components will be placed. This is achieved by switching into Pads mode
+			and clicking on the pads themselves. By default Perfy starts in Trace mode, so start by selecting the "Pads" mode from the toolbar or menu:
 		</Paragraph>
 
 		<Paragraph>
-			The first step in designing a Perf+ circuit is to specify where your components will be placed. In Perfy this is accomplished by switching into Pads mode
-			and clicking on the pads themselves. By default Perfy starts in Trace mode, so start by clicking on the "Pads" button on the tool bar:
+			<Image Source="/Perfy;component/Images/padsmode.png" Stretch="None" />
 		</Paragraph>
 
 		<Paragraph>
-			To select a pad as a component lead simply click on it with the left mouse button, a right-click will similarly deselect it. Component pads appear bright yellow
+			To select a pad as a component lead simply click on it with the left mouse button; a right-click will similarly deselect it. Component pads appear bright yellow
 			to set them apart from regular pads:
 		</Paragraph>
 
 		<Paragraph>
+			<Image Source="/Perfy;component/Images/components.png" Stretch="None" />
+		</Paragraph>
+
+		<Paragraph>
 			Specifying component pads in Perfy is purely an asthetic step used to help keep track of your component locations when it comes time to lay down your traces.
-			It's perfectly possible to design your circuit without specifying components, but if you skip this step then it will be much more difficult later on to remember
-			where you need yoru traces to go.
+			It's perfectly possible to design your circuit without specifying components, but if you skip this step then it will be more difficult later on to remember
+			where you need your traces to go.
 		</Paragraph>
 
 	</Section>
 
-	<Section>
+	<Section BreakPageBefore="True">
 
 		<Paragraph>
 			<Bold>Drawing Traces</Bold>
 		</Paragraph>
 
 		<Paragraph>
-			With component pads now clearly marked it's now time to design our traces. First we need to switch into Trace mode by clicking the "Trace" radio button on the tool bar:
+			With component pads now clearly marked it's now time to design our traces. First we need to switch into Trace mode by selecting the "Trace" option from the toolbar or menu:
+		</Paragraph>
+
+		<Paragraph>
+			<Image Source="/Perfy;component/Images/tracemode.png" Stretch="None" />
 		</Paragraph>
 
 		<Paragraph>
@@ -90,62 +138,175 @@
 		</Paragraph>
 
 		<Paragraph>
-			When the second point has been laid down Perfy will continue laying down traces with each left-button mouse click, in this way you can easily draw continuous traces
-			around the board. A right-mouse click will cancel the trace currently being drawn:
-		</Paragraph>
-
-		<Paragraph>
-			Note that as each horizontal or vertical trace is drawn Perfy automatically connects the corresponding hole to the appropriate trace line on either the front or rear
-			of the board. As with the traces horizontal connections appear red and vertical connections appear blue:
-		</Paragraph>
-
-		<Paragraph>
-			Any hole with both a horizontal and vertical connection is the Perf+ equivelent of a "via" i.e. a pad that connects both sides of the board. In Perfy these pads appear magenta:
-		</Paragraph>
-
-		<Paragraph>
-			In this image we see a pad that has been marked as a component pad, and we see both horizontal and vertical traces travelling along side it. Note however that although
-			a component lead is due to be soldered in this location it will not be connected to either trace:
-		</Paragraph>
-
-		<Paragraph>
-			In this image we see a pad that has been marked as a component pad, and we see both horizontal and vertical traces travelling alongside it. The component lead
-			soldered in this location will not, however, be connected to either the horizontal or vertical traces that run alongside it:
+			<Image Source="/Perfy;component/Images/firsttrace.png" Stretch="None" />
 		</Paragraph>
 
 	</Section>
 
-	<Section>
+	<Section BreakPageBefore="True">
 
 		<Paragraph>
-			<Bold>Transitioning To Hardware</Bold>
+			Once the first trace has been laid down Perfy will continue laying down another trace starting from the endpoint from the first,
+			in this way you can easily draw a continuous, connected trace around the board. A right-mouse click will cancel the trace currently being drawn:
 		</Paragraph>
 
 		<Paragraph>
-			As a circuit is being design Perfy is continuously calculating where cuts need to be made to the Perf+ board to keep. You can see these cuts at any time
-			by selecting either "Horz Cuts" or "Vert Cuts" from the view options on the toolbar:
+			<Image Source="/Perfy;component/Images/secondtrace.png" Stretch="None" />
 		</Paragraph>
 
 		<Paragraph>
-			The "Horz Pads" and "Vert Pads" options also allow you to see which pads need to be connected to which traces, this is particularly helpful with "vias" as they
-			can be soldered in advance before placing any components:
+			Traces can be deleted by simply right-clicking on any pad with traces connected to it.
+		</Paragraph>
+
+	</Section>
+
+	<Section BreakPageBefore="True">
+
+		<Paragraph>
+			Note that Perfy automatically connects holes to the appropriate horizontal or vertical trace line on either front or rear of the board as each trace is drawn.
+			As with traces, horizontal connections appear red and vertical connections appear blue. Any hole with both a horizontal and vertical connection is
+			the Perf+ equivelent of a "via" i.e. a pad that connects both sides of the board; these pads appear magenta:
 		</Paragraph>
 
 		<Paragraph>
-			The pads view also help in indentifying component bridges that need to be made before the component itself is laid down. As an example, immagine we are placing
-			a component on the front (horizontal) side of the board that must be connected only to its horizontal bridge:
+			<Image Source="/Perfy;component/Images/via.png" Stretch="None" />
+		</Paragraph>
+
+	</Section>
+
+	<Section BreakPageBefore="True">
+
+		<Paragraph>
+			In this image we see a pad that has been marked as a component pad, however it is no connected to either of its neghbouring traces and therefore
+			should not be bridged to either during soldering:
 		</Paragraph>
 
 		<Paragraph>
-			Soldering this bridge will be difficult if the component lies over top of the bridge itself (as is typically the case with ICs).
+			<Image Source="/Perfy;component/Images/isolated.png" Stretch="None" />
+		</Paragraph>
+
+	</Section>
+
+	<Section BreakPageBefore="True">
+
+		<Paragraph>
+			Perfy provides real-time feedback to help in the design process. Hovering the mouse over a pad will highlight all pads and traces connected to it
+			as well as pop up a tool tip showing the corresponding trace coordinates:
+		</Paragraph>
+
+		<Paragraph>
+			<Image Source="/Perfy;component/Images/indicators.png" Stretch="None" />
+		</Paragraph>
+
+	</Section>
+
+	<Section BreakPageBefore="True">
+
+		<Paragraph>
+			<Bold>Cuts View</Bold>
+		</Paragraph>
+
+		<Paragraph>
+			As a circuit is being designed Perfy continuously calculates where cuts need to be made to keep traces electrically isolated. You can see these cuts at any time
+			by selecting "Cuts" from the view options on the toolbar or menu:
+		</Paragraph>
+
+		<Paragraph>
+			<Image Source="/Perfy;component/Images/cuts.png" Stretch="None" />
+		</Paragraph>
+
+		<Paragraph>
+			Perfy is smart enough to detect when adjacent traces on the same horizontal or vertical trace line are electrically connected via other routes and it will not generate
+			uneccessary cuts in such cases. In general, however, such cases should be avoided; in addition to making the circuit more difficult to read it suggests that
+			unneccessary traces and solder pads may exist elsewhere in the circuit.
+		</Paragraph>
+
+	</Section>
+	
+	<Section BreakPageBefore="True">
+
+		<Paragraph>
+			<Bold>Perspectives</Bold>
+		</Paragraph>
+
+		<Paragraph>
+			Ordinarily both front and rear sides of the Perf+ board are drawn overlapped, so the rear traces and pad connections appear back-to-front.
+			Selecting the "Rear" perspective from the toolbar or menu allows you to see what the board will look like when looking directly at the rear side of the board:
+		</Paragraph>
+
+		<Paragraph>
+			<Image Source="/Perfy;component/Images/rear.png" Stretch="None" />
+		</Paragraph>
+
+		<Paragraph>
+			The labels around the edges of the board give an additional indication of which side you are looking at and should be cross-checked before transitioning
+			your design to the Perf+ hardware so that you don't inadvertantly ruin a board.
+		</Paragraph>
+
+	</Section>
+
+	<Section BreakPageBefore="True">
+
+		<Paragraph>
+			<Bold>Pads View</Bold>
+		</Paragraph>
+
+		<Paragraph>
+			The "Pads" view mode allows you to see which pads need to be connected to which traces, this is particularly helpful with "vias" as they
+			can be soldered in advance before placing any components. In the image below the "vias" are the blue pads not flagged as components (i.e. the
+			ones without the bright yellow circles):
+		</Paragraph>
+
+		<Paragraph>
+			<Image Source="/Perfy;component/Images/conn.png" Stretch="None" />
+		</Paragraph>
+
+		<Paragraph>
+			Once again, switching between Front and Rear perspectives will show the corresponding side of the board.
+		</Paragraph>
+
+	</Section>
+
+	<Section BreakPageBefore="True">
+
+		<Paragraph>
+			Pad views also help in identifying component bridges that need to be made before the component itself is laid down. For example, immagine we are placing
+			a component on the front (horizontal) side of the board which must be bridged only to its neighbouring horizontal trace:
+		</Paragraph>
+
+		<Paragraph>
+			<Image Source="/Perfy;component/Images/horzconn.png" Stretch="None" />
+		</Paragraph>
+
+		<Paragraph>
+			Soldering this bridge will be difficult if the component lies over top of the bridge itself, as is often the case with ICs.
 			In cases like this you need to solder the bridge before placing the component, being careful not to solder over the pad hole itself.
 			Once done you can then insert the component and solder its lead to the other side, being careful again not to accidentally connect it to the vertical pad.
 		</Paragraph>
 
 	</Section>
 
+	<Section BreakPageBefore="True">
 
-	<Section>
+		<Paragraph>
+			<Bold>Template View</Bold>
+		</Paragraph>
+
+		<Paragraph>
+			<Italic>Please note that the template feature is currently incomplete and under development.</Italic>
+			When selected from the toolbar or menu the "Template" option switches to a simplified black-and-white version of
+			the circuit containing cuts and traces for the current side (i.e. Front or Rear) as well as small circles to indicate the location of component pads.
+			The intended purpose of template mode is to provide a version of the circuit that can be printed out on transparency sheets and overlaid across the Perf+
+			board itself as a visual aid to assist in circuit construction.
+		</Paragraph>
+
+		<Paragraph>
+			<Image Source="/Perfy;component/Images/template.png" Stretch="None" />
+		</Paragraph>
+
+	</Section>
+
+	<Section BreakPageBefore="True">
 		
 		<Paragraph>
 			<Bold>Support</Bold>
@@ -157,6 +318,10 @@
 
 		<Paragraph>
 			For information on Perf+ please refer to Ben Wang's Kickstarter page at <Hyperlink NavigateUri="https://www.kickstarter.com/projects/658903329/perf-the-perfboard-reinvented/description">https://www.kickstarter.com/projects/658903329/perf-the-perfboard-reinvented/description</Hyperlink>.
+		</Paragraph>
+
+		<Paragraph>
+			Thanks to Kean Maizels at <Hyperlink NavigateUri="http://www.kean.com.au/">Kean Electronics</Hyperlink> for feedback and tips etc.
 		</Paragraph>
 
 	</Section>

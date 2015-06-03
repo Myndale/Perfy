@@ -21,6 +21,7 @@ namespace Perfy.View
 	public partial class CellControl : UserControl
 	{
 		const double ThinTrace = 2;
+		const double MediumTrace = 5;
 		const double ThickTrace = 10;
 
 		public MainViewModel MainViewModel
@@ -48,6 +49,7 @@ namespace Perfy.View
 		static private Brush HighlightedVertBrush = (Brush)Application.Current.Resources["HighlightedVertBrush"];
 		static private Brush HighlightedHorzVertBrush = (Brush)Application.Current.Resources["HighlightedHorzVertBrush"];
 		static private Brush HighlightBrush = (Brush)Application.Current.Resources["HighlightBrush"];
+		static private Brush BackgroundBrush = (Brush)Application.Current.Resources["BackgroundBrush"];
 		
 		public CellControl()
 		{
@@ -64,11 +66,12 @@ namespace Perfy.View
 			pad = e.NewValue as MainViewModel;
 			if (pad != null)
 				pad.PropertyChanged += control.MainViewModelChanged;
+			control.UpdateControl();
 		}
 
 		void MainViewModelChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
 		{
-			if (e.PropertyName == "ViewMode")
+			if ((e.PropertyName == "ViewMode") || (e.PropertyName == "Perspective"))
 				UpdateControl();
 		}
 
@@ -81,6 +84,7 @@ namespace Perfy.View
 			pad = e.NewValue as PadViewModel;
 			if (pad != null)
 				pad.PropertyChanged += control.BoundDataContextChanged;
+			control.UpdateControl();
 		}
 
 		void BoundDataContextChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -93,14 +97,27 @@ namespace Perfy.View
 			var mvm = this.MainViewModel;
 			if (mvm.ViewMode == ViewMode.Normal)
 				UpdateNormal();
-			else if (mvm.ViewMode == ViewMode.HorzCuts)
-				UpdateHorzCuts();
-			else if (mvm.ViewMode == ViewMode.VertCuts)
-				UpdateVertCuts();
-			else if (mvm.ViewMode == ViewMode.HorzPads)
-				UpdateHorzPads();
-			else if (mvm.ViewMode == ViewMode.VertPads)
-				UpdateVertPads();
+			else if (mvm.ViewMode == ViewMode.Cuts)
+			{
+				if (mvm.Perspective == Perspective.Front)
+					UpdateHorzCuts();
+				else
+					UpdateVertCuts();
+			}
+			else if (mvm.ViewMode == ViewMode.Pads)
+			{
+				if (mvm.Perspective == Perspective.Front)
+					UpdateHorzPads();
+				else
+					UpdateVertPads();
+			}
+			else if (mvm.ViewMode == ViewMode.Template)
+			{
+				if (mvm.Perspective == Perspective.Front)
+					UpdateHorzTemplate();
+				else
+					UpdateVertTemplate();
+			}
 		}
 
 		private void UpdateNormal()
@@ -110,18 +127,25 @@ namespace Perfy.View
 			if (pad == null)
 				return;
 
+			this.HorzGuide.Fill = NormalPadBrush;			
 			this.HorzGuide.Visibility = Visibility.Visible;
 			this.HorzGuide.Height = ThinTrace;
 			this.VertGuide.Visibility = Visibility.Visible;
 			this.VertGuide.Width = ThinTrace;
+			this.VertGuide.Fill = NormalPadBrush;
 
 			this.HorzConn.Visibility = pad.HorzPad ? Visibility.Visible : Visibility.Hidden;
 			this.HorzConn.Fill = pad.HorzHighlighted ? HighlightedHorzBrush : NormalHorzBrush;
+			this.HorzConn.StrokeThickness = 0;
 			this.VertConn.Visibility = pad.VertPad ? Visibility.Visible : Visibility.Hidden;
 			this.VertConn.Fill = pad.VertHighlighted ? HighlightedVertBrush : NormalVertBrush;
+			this.VertConn.StrokeThickness = 0;
 			this.HorzVertConn.Visibility = (pad.HorzPad && pad.VertPad) ? Visibility.Visible : Visibility.Hidden;
-			this.HorzVertConn.Fill = pad.HorzHighlighted ? HighlightedHorzVertBrush : NormalHorzVertBrush;
+			this.HorzVertConn.Fill = pad.HorzHighlighted ? HighlightedHorzVertBrush : NormalHorzVertBrush;			
 
+			this.MainPad.Visibility = Visibility.Visible;
+			this.PadHole.Fill = BackgroundBrush;
+			this.PadHole.StrokeThickness = 0;
 			if (pad.Component)
 			{
 				if (pad.HorzPad && pad.HorzHighlighted)
@@ -178,19 +202,26 @@ namespace Perfy.View
 
 			this.HorzGuide.Visibility = Visibility.Visible;
 			this.HorzGuide.Height = ThickTrace;
+			this.HorzGuide.Fill = NormalPadBrush;			
 			this.VertGuide.Visibility = Visibility.Visible;
 			this.VertGuide.Width = ThinTrace;
+			this.VertGuide.Fill = NormalPadBrush;			
 
 			this.HorzConn.Visibility = Visibility.Hidden;
 			this.VertConn.Visibility = Visibility.Hidden;
 			this.HorzVertConn.Visibility = Visibility.Hidden;
 
+			this.MainPad.Visibility = Visibility.Visible;
+			this.PadHole.Fill = BackgroundBrush;
+			this.PadHole.StrokeThickness = 0;
 			if (pad.Component)
 				this.MainPad.Fill = NormalComponentBrush;
 			else
 				this.MainPad.Fill = NormalPadBrush;
 
 			this.HorzCut.Visibility = pad.HorzCut ? Visibility.Visible : Visibility.Hidden;
+			this.HorzCut.StrokeThickness = ThinTrace;
+			this.HorzCut.Fill = HighlightedHorzBrush;
 			this.VertCut.Visibility = Visibility.Hidden;
 
 			this.HorzTrace.Visibility = Visibility.Hidden;
@@ -213,13 +244,18 @@ namespace Perfy.View
 
 			this.HorzGuide.Visibility = Visibility.Visible;
 			this.HorzGuide.Height = ThinTrace;
+			this.HorzGuide.Fill = NormalPadBrush;
 			this.VertGuide.Visibility = Visibility.Visible;
 			this.VertGuide.Width = ThickTrace;
+			this.VertGuide.Fill = NormalPadBrush;
 
 			this.HorzConn.Visibility = Visibility.Hidden;
 			this.VertConn.Visibility = Visibility.Hidden;
 			this.HorzVertConn.Visibility = Visibility.Hidden;
 
+			this.MainPad.Visibility = Visibility.Visible;
+			this.PadHole.Fill = BackgroundBrush;
+			this.PadHole.StrokeThickness = 0;
 			if (pad.Component)
 				this.MainPad.Fill = NormalComponentBrush;
 			else
@@ -227,6 +263,8 @@ namespace Perfy.View
 
 			this.HorzCut.Visibility = Visibility.Hidden;
 			this.VertCut.Visibility = pad.VertCut ? Visibility.Visible : Visibility.Hidden;
+			this.VertCut.Fill = HighlightedVertBrush;
+			this.VertCut.StrokeThickness = ThinTrace;
 
 			this.HorzTrace.Visibility = Visibility.Hidden;
 			this.HorzJunction.Visibility = Visibility.Hidden;
@@ -248,14 +286,20 @@ namespace Perfy.View
 
 			this.HorzGuide.Visibility = Visibility.Visible;
 			this.HorzGuide.Height = ThinTrace;
+			this.HorzGuide.Fill = NormalPadBrush;
 			this.VertGuide.Visibility = Visibility.Visible;
 			this.VertGuide.Width = ThinTrace;
+			this.VertGuide.Fill = NormalPadBrush;
 
 			this.HorzConn.Visibility = pad.HorzPad ? Visibility.Visible : Visibility.Hidden;
+			this.HorzConn.StrokeThickness = 0;
 			this.HorzConn.Fill = NormalHorzBrush;
 			this.VertConn.Visibility = Visibility.Hidden;
 			this.HorzVertConn.Visibility = Visibility.Hidden;
 
+			this.MainPad.Visibility = Visibility.Visible;
+			this.PadHole.Fill = BackgroundBrush;
+			this.PadHole.StrokeThickness = 0;
 			if (pad.Component)
 				this.MainPad.Fill = NormalComponentBrush;
 			else
@@ -289,14 +333,20 @@ namespace Perfy.View
 
 			this.HorzGuide.Visibility = Visibility.Visible;
 			this.HorzGuide.Height = ThinTrace;
+			this.HorzGuide.Fill = NormalPadBrush;
 			this.VertGuide.Visibility = Visibility.Visible;
 			this.VertGuide.Width = ThinTrace;
+			this.VertGuide.Fill = NormalPadBrush;
 
 			this.HorzConn.Visibility = Visibility.Hidden;
 			this.VertConn.Visibility = pad.VertPad ? Visibility.Visible : Visibility.Hidden;
 			this.VertConn.Fill = NormalVertBrush;
+			this.VertConn.StrokeThickness = 0;
 			this.HorzVertConn.Visibility = Visibility.Hidden;
 
+			this.MainPad.Visibility = Visibility.Visible;
+			this.PadHole.Fill = BackgroundBrush;
+			this.PadHole.StrokeThickness = 0;
 			if (pad.Component)
 				this.MainPad.Fill = NormalComponentBrush;
 			else
@@ -309,6 +359,94 @@ namespace Perfy.View
 
 			this.HorzCut.Visibility = Visibility.Hidden;
 			this.VertCut.Visibility = Visibility.Hidden;
+
+			this.HorzTrace.Visibility = Visibility.Hidden;
+			this.HorzJunction.Visibility = Visibility.Hidden;
+			this.VertTrace.Visibility = Visibility.Hidden;
+			this.VertJunction.Visibility = Visibility.Hidden;
+
+			this.Junction.Visibility = Visibility.Hidden;
+
+			this.HorzHighlight.Visibility = Visibility.Hidden;
+			this.VertHighlight.Visibility = Visibility.Hidden;
+		}
+
+		private void UpdateHorzTemplate()
+		{
+			var mvm = this.MainViewModel;
+			var pad = this.DataContext as PadViewModel;
+			if (pad == null)
+				return;
+
+			this.HorzGuide.Visibility = Visibility.Visible;
+			this.HorzGuide.Height = ThinTrace;
+			this.HorzGuide.Fill = Brushes.Black;
+			this.VertGuide.Visibility = Visibility.Visible;
+			this.VertGuide.Width = ThinTrace;
+			this.VertGuide.Fill = Brushes.Black;
+
+			this.HorzConn.Visibility = pad.HorzPad ? Visibility.Visible : Visibility.Hidden;
+			this.HorzConn.Fill = Brushes.White;
+			this.HorzConn.Stroke = Brushes.Black;
+			this.HorzConn.StrokeThickness = MediumTrace;
+			this.VertConn.Visibility = Visibility.Hidden;
+			this.HorzVertConn.Visibility = Visibility.Hidden;
+
+			this.MainPad.Visibility = Visibility.Hidden;
+			this.PadHole.Fill = Brushes.White;
+			if (pad.Component)
+				this.PadHole.StrokeThickness = MediumTrace;
+			else
+				this.PadHole.StrokeThickness = 0;
+			
+			this.HorzCut.Visibility = pad.HorzCut ? Visibility.Visible : Visibility.Hidden;
+			this.HorzCut.Fill = Brushes.White;
+			this.HorzCut.StrokeThickness = MediumTrace;
+			this.VertCut.Visibility = Visibility.Hidden;
+
+			this.HorzTrace.Visibility = Visibility.Hidden;
+			this.HorzJunction.Visibility = Visibility.Hidden;
+			this.VertTrace.Visibility = Visibility.Hidden;
+			this.VertJunction.Visibility = Visibility.Hidden;
+
+			this.Junction.Visibility = Visibility.Hidden;
+
+			this.HorzHighlight.Visibility = Visibility.Hidden;
+			this.VertHighlight.Visibility = Visibility.Hidden;
+		}
+
+		private void UpdateVertTemplate()
+		{
+			var mvm = this.MainViewModel;
+			var pad = this.DataContext as PadViewModel;
+			if (pad == null)
+				return;
+
+			this.HorzGuide.Visibility = Visibility.Visible;
+			this.HorzGuide.Height = ThinTrace;
+			this.HorzGuide.Fill = Brushes.Black;
+			this.VertGuide.Visibility = Visibility.Visible;
+			this.VertGuide.Width = ThinTrace;
+			this.VertGuide.Fill = Brushes.Black;
+
+			this.HorzConn.Visibility = Visibility.Hidden;			
+			this.VertConn.Visibility = pad.VertPad ? Visibility.Visible : Visibility.Hidden;
+			this.VertConn.Fill = Brushes.White;
+			this.VertConn.Stroke = Brushes.Black;
+			this.VertConn.StrokeThickness = MediumTrace;
+			this.HorzVertConn.Visibility = Visibility.Hidden;
+
+			this.MainPad.Visibility = Visibility.Hidden;
+			this.PadHole.Fill = Brushes.White;
+			if (pad.Component)
+				this.PadHole.StrokeThickness = MediumTrace;
+			else
+				this.PadHole.StrokeThickness = 0;
+
+			this.HorzCut.Visibility = Visibility.Hidden;
+			this.VertCut.Visibility = pad.VertCut ? Visibility.Visible : Visibility.Hidden;
+			this.VertCut.Fill = Brushes.White;
+			this.VertCut.StrokeThickness = MediumTrace;
 
 			this.HorzTrace.Visibility = Visibility.Hidden;
 			this.HorzJunction.Visibility = Visibility.Hidden;

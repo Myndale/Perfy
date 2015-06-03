@@ -24,7 +24,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>3</ApplicationRevision>
+    <ApplicationRevision>4</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -188,19 +188,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\BothLayers.png" />
-    <Resource Include="Images\Final.png" />
-    <Resource Include="Images\FirstPad.png" />
-    <Resource Include="Images\Junc1.png" />
-    <Resource Include="Images\Junctions.png" />
-    <Resource Include="Images\RedLayer.png" />
-    <Resource Include="Images\Target.png" />
-    <Resource Include="Images\ThreePads.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\First.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\perfplus.png" />
   </ItemGroup>
   <ItemGroup>
@@ -219,6 +206,30 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\components.png" />
+    <Resource Include="Images\cuts.png" />
+    <Resource Include="Images\firsttrace.png" />
+    <Resource Include="Images\horzconn.png" />
+    <Resource Include="Images\isolated.png" />
+    <Resource Include="Images\pads.png" />
+    <Resource Include="Images\padsmode.png" />
+    <Resource Include="Images\secondtrace.png" />
+    <Resource Include="Images\tracemode.png" />
+    <Resource Include="Images\via.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\conn.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\rear.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\indicators.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\template.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

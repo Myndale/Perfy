@@ -9,9 +9,8 @@ namespace Perfy.ViewModel
 	public enum ViewMode
 	{
 		Normal,
-		HorzCuts,
-		VertCuts,
-		HorzPads,
-		VertPads
+		Cuts,
+		Pads,
+		Template
 	}
 }
