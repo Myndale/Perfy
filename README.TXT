@@ -51,7 +51,7 @@ Changes:
 	- Exit warning for unsaved changes.
 
 Version: 1.0.0.3
-Date: 1st June 2015
+Date: 3rd June 2015
 Changes:
 	- Added cut views.
 	- Added template views.
