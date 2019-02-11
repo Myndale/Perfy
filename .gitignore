@@ -179,3 +179,13 @@ Desktop.ini
 
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
+
+.vs/Perfy/v15/Server/sqlite3/storage.ide-wal
+.vs/Perfy/v15/Server/sqlite3/storage.ide-shm
+.vs/Perfy/v15/Server/sqlite3/storage.ide
+.vs/Perfy/v15/Server/sqlite3/db.lock
+.vs/Perfy/DesignTimeBuild/.dtbcache
+src/.vs/Perfy/v15/Server/sqlite3/storage.ide-wal
+src/.vs/Perfy/v15/Server/sqlite3/storage.ide-shm
+src/.vs/Perfy/v15/Server/sqlite3/storage.ide
+src/.vs/Perfy/v15/Server/sqlite3/db.lock

@@ -201,7 +201,7 @@
 					</ItemsPanelTemplate>
 				</ItemsControl.ItemsPanel>
 				<ItemsControl.ItemContainerStyle>
-					<Style>
+					<Style TargetType="{x:Type ContentPresenter}">
 						<Setter Property="Canvas.Left" Value="{Binding X}" />
 						<Setter Property="Canvas.Top" Value="{Binding Y}" />
 					</Style>
