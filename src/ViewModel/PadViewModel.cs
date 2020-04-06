@@ -124,7 +124,7 @@ namespace Perfy.ViewModel
 		protected override void PositionUpdated()
 		{
 			base.PositionUpdated();
-			this.ToolTip = String.Format("{0},{1}", (char)('A' + this.Y), this.X);
+			this.ToolTip = String.Format("{0},{1}", (char)('A' + this.Y), this.X+1);
 		}
 		
 	}

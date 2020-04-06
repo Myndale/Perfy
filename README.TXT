@@ -60,3 +60,14 @@ Changes:
 	- Optimized graphics
 	- Added image export
 	- Rewrote help and fixed hyperlinks.
+
+Version: 1.0.0.4
+Date: 25th November 2019
+Changes:
+	- Fixed Win10 signing issue
+
+Version: 1.0.0.5
+Date: 6th April 2020
+Changes:
+	- Fixed cell tooltip incorrect text bug.
+	
